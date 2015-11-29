@@ -1,1 +1,208 @@
 EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:jacks
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L CONN_01X03 P?
+U 1 1 565AFB00
+P 3700 3750
+F 0 "P?" H 3700 3500 50  0000 C CNN
+F 1 "IN_CABLE" H 3600 4000 50  0000 C CNN
+F 2 "" H 3700 3750 60  0000 C CNN
+F 3 "" H 3700 3750 60  0000 C CNN
+	1    3700 3750
+	-1   0    0    1   
+$EndComp
+$Comp
+L R R?
+U 1 1 565AFC8A
+P 4500 3750
+F 0 "R?" V 4580 3750 40  0000 C CNN
+F 1 "20" V 4507 3751 40  0000 C CNN
+F 2 "" V 4430 3750 30  0000 C CNN
+F 3 "" H 4500 3750 30  0000 C CNN
+	1    4500 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L R R?
+U 1 1 565AFD94
+P 5400 3500
+F 0 "R?" V 5480 3500 40  0000 C CNN
+F 1 "RX_LOW" V 5407 3501 40  0000 C CNN
+F 2 "" V 5330 3500 30  0000 C CNN
+F 3 "" H 5400 3500 30  0000 C CNN
+	1    5400 3500
+	0    1    1    0   
+$EndComp
+$Comp
+L R R?
+U 1 1 565AFDDE
+P 5400 4000
+F 0 "R?" V 5480 4000 40  0000 C CNN
+F 1 "RX_HIGH" V 5407 4001 40  0000 C CNN
+F 2 "" V 5330 4000 30  0000 C CNN
+F 3 "" H 5400 4000 30  0000 C CNN
+	1    5400 4000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4250 3750 3900 3750
+$Comp
+L JACK_STEREO_FEMALE J?
+U 1 1 565B0036
+P 7000 3400
+F 0 "J?" H 7075 3675 60  0000 C CNN
+F 1 "JACK" H 7000 3100 60  0000 C CNN
+F 2 "" H 6700 3375 60  0000 C CNN
+F 3 "" H 6700 3375 60  0000 C CNN
+	1    7000 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 3350 6700 3350
+Wire Wire Line
+	4750 3750 5050 3750
+Wire Wire Line
+	5050 3500 5050 4000
+Wire Wire Line
+	5050 3500 5150 3500
+Wire Wire Line
+	5050 4000 5150 4000
+Connection ~ 5050 3750
+Wire Wire Line
+	3900 3650 4000 3650
+Wire Wire Line
+	4000 3650 4000 3350
+$Comp
+L GND #PWR?
+U 1 1 565B0189
+P 4000 4300
+F 0 "#PWR?" H 4000 4050 60  0001 C CNN
+F 1 "GND" H 4000 4150 60  0001 C CNN
+F 2 "" H 4000 4300 60  0000 C CNN
+F 3 "" H 4000 4300 60  0000 C CNN
+	1    4000 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 4300 4000 3850
+Wire Wire Line
+	4000 3850 3900 3850
+$Comp
+L C C?
+U 1 1 565B0323
+P 4850 4050
+F 0 "C?" H 4850 4150 40  0000 L CNN
+F 1 "47n" H 4856 3965 40  0000 L CNN
+F 2 "" H 4888 3900 30  0000 C CNN
+F 3 "" H 4850 4050 60  0000 C CNN
+	1    4850 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 3850 4850 3750
+Connection ~ 4850 3750
+$Comp
+L GND #PWR?
+U 1 1 565B03C9
+P 4850 4300
+F 0 "#PWR?" H 4850 4050 60  0001 C CNN
+F 1 "GND" H 4850 4150 60  0001 C CNN
+F 2 "" H 4850 4300 60  0000 C CNN
+F 3 "" H 4850 4300 60  0000 C CNN
+	1    4850 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 4300 4850 4250
+Wire Wire Line
+	6700 3500 5650 3500
+$Comp
+L CONN_01X03 P?
+U 1 1 565B0691
+P 7250 4100
+F 0 "P?" H 7000 3900 50  0000 C CNN
+F 1 "NOOSE_CABLE" H 7300 4300 50  0000 C CNN
+F 2 "" H 7250 4100 60  0000 C CNN
+F 3 "" H 7250 4100 60  0000 C CNN
+	1    7250 4100
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	7050 4000 5650 4000
+Wire Wire Line
+	7050 4100 6950 4100
+Wire Wire Line
+	6950 4100 6950 4300
+$Comp
+L GND #PWR?
+U 1 1 565B07C4
+P 6950 4300
+F 0 "#PWR?" H 6950 4050 60  0001 C CNN
+F 1 "GND" H 6950 4150 60  0001 C CNN
+F 2 "" H 6950 4300 60  0000 C CNN
+F 3 "" H 6950 4300 60  0000 C CNN
+	1    6950 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7050 4200 6950 4200
+Connection ~ 6950 4200
+$Comp
+L GND #PWR?
+U 1 1 565B080E
+P 7250 3800
+F 0 "#PWR?" H 7250 3550 60  0001 C CNN
+F 1 "GND" H 7250 3650 60  0001 C CNN
+F 2 "" H 7250 3800 60  0000 C CNN
+F 3 "" H 7250 3800 60  0000 C CNN
+	1    7250 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7250 3800 7250 3750
+NoConn ~ 6700 3600
+NoConn ~ 6700 3250
+$EndSCHEMATC
