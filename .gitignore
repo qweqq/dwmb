@@ -72,6 +72,8 @@ Gemfile.lock
 
 *.kicad_pcb-bak
 *.bak
+*-cache.lib
+*.bck
 fp-lib-table
 
 run/vote/
