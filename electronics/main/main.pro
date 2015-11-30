@@ -1,4 +1,4 @@
-update=Mon 30 Nov 2015 12:48:10 AM EET
+update=Mon 30 Nov 2015 11:56:40 PM EET
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,5 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=lcd
+LibName31=jacks
+LibName32=uln2803
