@@ -1269,17 +1269,6 @@ $EndComp
 Text Label 5550 2450 0    60   ~ 0
 BACKLIGHT
 $Comp
-L 4040 U?
-U 1 1 565E1170
-P 9900 6050
-F 0 "U?" H 10000 6700 60  0000 C CNN
-F 1 "4040" H 10150 5400 60  0000 C CNN
-F 2 "" H 9900 6050 60  0000 C CNN
-F 3 "" H 9900 6050 60  0000 C CNN
-	1    9900 6050
-	1    0    0    -1  
-$EndComp
-$Comp
 L ULN2803 U?
 U 1 1 565E3524
 P 11500 5900
@@ -1290,21 +1279,21 @@ F 3 "" H 11400 5900 60  0000 C CNN
 	1    11500 5900
 	1    0    0    -1  
 $EndComp
-Text Label 10650 6000 0    60   ~ 0
-L1
-Text Label 10650 5900 0    60   ~ 0
-L2
-Text Label 10650 6100 0    60   ~ 0
-L3
-Text Label 10650 5800 0    60   ~ 0
-L4
-Text Label 10650 5700 0    60   ~ 0
-L5
 Text Label 10650 5600 0    60   ~ 0
-L6
+L1
 Text Label 10650 5500 0    60   ~ 0
-L7
+L2
+Text Label 10650 5700 0    60   ~ 0
+L3
+Text Label 10650 6000 0    60   ~ 0
+L4
+Text Label 10650 6100 0    60   ~ 0
+L5
+Text Label 10650 5800 0    60   ~ 0
+L6
 Text Label 10650 6200 0    60   ~ 0
+L7
+Text Label 10650 5900 0    60   ~ 0
 L8
 $Comp
 L GND #PWR?
@@ -1334,10 +1323,6 @@ L7
 Text Label 10850 6200 0    60   ~ 0
 L8
 NoConn ~ 12000 6300
-NoConn ~ 10550 6600
-NoConn ~ 10550 6500
-NoConn ~ 10550 6400
-NoConn ~ 10550 6300
 $Comp
 L BI_LED D?
 U 1 1 565E7708
@@ -2019,4 +2004,29 @@ F 3 "" H 12800 2250 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 12800 2300
+$Comp
+L 4022 U?
+U 1 1 565F1C66
+P 9900 5950
+F 0 "U?" H 9900 6500 60  0000 C CNN
+F 1 "4022" H 9900 5400 60  0000 C CNN
+F 2 "" H 9900 5950 60  0000 C CNN
+F 3 "" H 9900 5950 60  0000 C CNN
+	1    9900 5950
+	1    0    0    -1  
+$EndComp
+NoConn ~ 10550 6400
+$Comp
+L GND #PWR?
+U 1 1 565F283A
+P 9200 5600
+F 0 "#PWR?" H 9200 5350 60  0001 C CNN
+F 1 "GND" H 9200 5450 60  0001 C CNN
+F 2 "" H 9200 5600 60  0000 C CNN
+F 3 "" H 9200 5600 60  0000 C CNN
+	1    9200 5600
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	9200 5600 9250 5600
 $EndSCHEMATC
