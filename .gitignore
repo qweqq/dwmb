@@ -75,6 +75,7 @@ Gemfile.lock
 *-cache.lib
 *.bck
 fp-lib-table
+_saved_*.sch
 
 run/vote/
 run/ip_config.sh
