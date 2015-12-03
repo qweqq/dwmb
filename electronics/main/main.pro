@@ -1,4 +1,4 @@
-update=Wed 02 Dec 2015 12:30:42 AM EET
+update=Thu 03 Dec 2015 06:05:59 PM EET
 version=1
 last_client=kicad
 [pcbnew]
@@ -62,3 +62,4 @@ LibName30=lcd
 LibName31=jacks
 LibName32=uln2803
 LibName33=crystal_s
+LibName34=bi_led
