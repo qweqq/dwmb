@@ -128,9 +128,7 @@ F 3 "" H 3350 4350 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3350 4350 3350 4250
-Wire Wire Line
-	3350 4250 3350 4150
+	3350 4150 3350 4350
 Wire Wire Line
 	3350 4150 3250 4150
 Wire Wire Line
@@ -150,16 +148,16 @@ $EndComp
 Wire Wire Line
 	5000 4050 5000 4150
 Wire Wire Line
-	4900 4150 4900 4050
+	4900 4050 4900 4150
 Connection ~ 4900 4050
 Wire Wire Line
-	4800 4150 4800 4050
+	4800 4050 4800 4150
 Connection ~ 4800 4050
 Wire Wire Line
-	4700 4150 4700 4050
+	4700 4050 4700 4150
 Connection ~ 4700 4050
 Wire Wire Line
-	4600 4150 4600 4050
+	4600 4050 4600 4150
 Connection ~ 4600 4050
 $Comp
 L GND #PWR04
@@ -173,17 +171,9 @@ F 3 "" H 5000 4750 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5000 4750 5000 4700
+	5000 4650 5000 4750
 Wire Wire Line
-	5000 4700 5000 4650
-Wire Wire Line
-	5000 4700 4900 4700
-Wire Wire Line
-	4900 4700 4800 4700
-Wire Wire Line
-	4800 4700 4700 4700
-Wire Wire Line
-	4700 4700 4600 4700
+	4600 4700 5000 4700
 Wire Wire Line
 	4600 4700 4600 4650
 Connection ~ 5000 4700
@@ -235,7 +225,7 @@ F 3 "" H 4050 4350 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4050 4150 4050 4050
+	4050 4050 4050 4150
 Connection ~ 4050 4050
 $Comp
 L GND #PWR06
@@ -273,11 +263,7 @@ F 3 "" H 6100 4400 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	6100 4400 6200 4400
-Wire Wire Line
-	6200 4400 6300 4400
-Wire Wire Line
-	6300 4400 6450 4400
+	6100 4400 6450 4400
 Wire Wire Line
 	6450 4400 6450 4500
 Wire Wire Line
@@ -296,21 +282,7 @@ Wire Wire Line
 Text Label 3650 4050 0    60   ~ 0
 +5v
 Wire Wire Line
-	6850 4500 6850 4050
+	6850 4050 6850 4500
 Wire Wire Line
-	3250 4050 3650 4050
-Wire Wire Line
-	3650 4050 4050 4050
-Wire Wire Line
-	4050 4050 4600 4050
-Wire Wire Line
-	4600 4050 4700 4050
-Wire Wire Line
-	4700 4050 4800 4050
-Wire Wire Line
-	4800 4050 4900 4050
-Wire Wire Line
-	4900 4050 5000 4050
-Wire Wire Line
-	5000 4050 6850 4050
+	3250 4050 6850 4050
 $EndSCHEMATC
