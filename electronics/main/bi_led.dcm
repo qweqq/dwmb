@@ -1,0 +1,13 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP BI_LED
+D LED DOUBLE type Bicolore
+K LED
+$ENDCMP
+#
+$CMP BI_LED2
+D LED DOUBLE type Bicolore
+K LED
+$ENDCMP
+#
+#End Doc Library
