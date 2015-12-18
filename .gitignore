@@ -77,8 +77,7 @@ Gemfile.lock
 fp-lib-table
 _saved_*.sch
 
-run/vote/
-run/ip_config.sh
+cross_bin
 
 # scons
 .sconsign.dblite
