@@ -1,0 +1,211 @@
+# This SConstruct helps build Atmel AVR
+# projects easier with the AVR-GCC tools.
+#
+# It supports C, C++ and Assembly source files
+#
+# It contains the following targets:
+# scons             : builds everything
+# scons elf         : builds only the elf file
+# scons hex         : builds the hex file
+# scons ehex        : builds the .ee.hex file (eeprom)
+# scons disasm      : builds .s (disassembly)
+# scons size        : shows size information
+# scons writeflash  : uses avrdude to download
+#                     the program memory to the MCU
+# scons sshflash    : uses avrdude remotely over ssh
+# scons install     : alias for "scons writeflash"
+
+# -------- configuration options ---------
+
+# project name (use a single word, e.g. "myprj")
+pname = 'dwmb_mega8'
+
+# target chip name (as required by avr-gcc, e.g. atmega8)
+mcu = 'atmega8'
+
+# chip name used by AVRDUDE (e.g. m8)
+programmer_mcu = 'm8'
+
+# source files
+# .c, .cpp or .S (NOT .s !!! for asm)
+# example: ['main.c', 'foo.c', 'lowlevel.S']
+sources = ['main.c']
+
+# additional options (e.g. '-I/path/to/mydir', '-lmylib')
+options = []
+
+# build directory - all output files will go here
+build_dir = 'build'
+
+# optimisation level
+# can be 's' (size opt), '1', '2', '3' or '0' (not advised)
+optlevel = 's'
+
+# -------- AVRDUDE options ---------
+# only fill these in if you're using the writeflash target
+
+# programmer ID, used by AVRDUDE
+# examples: 'stk500', 'avr910', 'avrisp', 'pony'
+# can be changed with --programmer <programmer>
+avrdude_programmer = 'linuxgpio'
+
+# port - serial or parallel port to which the
+# hardware programmer is attached.
+# examples: '/dev/ttyS0', 'COM2', '/dev/ttyUSB0'
+# can be changed on the fly with --port <port>
+avrdude_port = None
+
+# remote hostname for using avrdude over ssh
+ssh_flash_hostname = "tardis"
+
+# -------- compiler flags ---------
+# these are the flags passed to the compilers
+# caution: cflags are passed to both cc and ++
+# but asmflags are all and only passed to as
+
+cflags = '-gdwarf-2 -fpack-struct' \
+    + ' -fshort-enums -funsigned-bitfields' \
+    + ' -funsigned-char' \
+    + ' -Wall'
+cppflags = '-fno-exceptions'
+
+asmflags = ''
+
+
+
+
+# ------------ Config done ---------------
+
+# output format for hex
+hexformat = 'ihex'
+
+# format the flags
+cflags += ' -I. ' + ' '.join(options) + ' -mmcu=' + mcu \
+    + ' -O' + optlevel
+asmflags += ' -I. ' + ' '.join(options) + ' -mmcu=' + mcu
+ldflags = '-mmcu=' + mcu
+
+import os, re, SCons.Tool
+
+def toBuildDir(name):
+    'prepends the build dir to a path'
+    return os.path.join(build_dir, name)
+
+# transform target to full path
+target = toBuildDir(pname)
+
+# determine target files
+targetelf = target + '.elf'
+targethex = target + '.hex'
+targeteepromhex = target + '.ee.hex'
+targetdisasm = target + '.s'
+
+# transform all sources to full path
+sources = map(lambda x: toBuildDir(x), sources)
+
+# set output to build dir
+VariantDir(build_dir, '.', duplicate=0)
+
+# create environment
+dummy = Environment()
+if re.search('^win', dummy['PLATFORM']):
+    print('Detected windows. Using MinGW')
+    env = Environment(ENV = os.environ, tools = ['mingw'])
+    Tool('mingw')(env)
+else:
+    env = Environment(ENV = os.environ)
+del dummy
+
+env['PROGSUFFIX']   = '.elf'
+
+# executable names
+env['CC'] = 'avr-gcc'
+env['CXX'] = 'avr-g++'
+env['OBJCOPY'] = 'avr-objcopy'
+env['OBJDUMP'] = 'avr-objdump'
+env['SIZE'] = 'avr-size'
+
+# include dir
+env['CPPPATH'] = '/usr/avr/include'
+
+# avrdude executable
+env['AVRDUDE'] = 'avrdude'
+
+# get avrdude options from command line
+AddOption('--programmer', dest='programmer', type='string', nargs=1
+            , action='store', help='Programmer id as used by avrdude')
+avrdude_programmer = GetOption('programmer') or avrdude_programmer
+
+AddOption('--port', dest='port', type='string', nargs=1
+            , action='store', help='Port id as used by avrdude')
+avrdude_port = GetOption('port') or avrdude_port
+
+AddOption('--hostname', dest='hostname', type='string', nargs=1
+            , action='store', help='ssh hostname for remote flashing')
+ssh_flash_hostname = GetOption('hostname') or ssh_flash_hostname
+
+# display the size report in a human-readable format
+# not supported by some old versions of avr-size
+human_readable_size = True
+
+# set flags into the environment
+env.Append(CCFLAGS = cflags)
+env.Append(CXXFLAGS = cppflags)
+env.Append(ASFLAGS = asmflags)
+env.Append(LINKFLAGS = ldflags)
+
+# build .elf
+env.Program(target = targetelf, source = sources)
+
+# build .hex
+env.Command(targethex, targetelf
+    , env['OBJCOPY'] + ' -O ' + hexformat \
+    + ' -j .text -j .data $SOURCE $TARGET')
+
+# build .ee.hex (eeprom)
+env.Command(targeteepromhex, targetelf
+    , env['OBJCOPY'] + ' -O ' + hexformat \
+    + ' -j .eeprom --change-section-lma .eeprom=0' \
+    + ' $SOURCE $TARGET')
+
+# create disassembly (.s)
+env.Command(targetdisasm, targetelf
+    , env['OBJDUMP'] + ' -S $SOURCE > $TARGET')
+
+# avr-size options
+if human_readable_size:
+    copt = ' -C ' + '--mcu=' + mcu
+else:
+    copt = ' -A'
+
+# display size
+env.Command('size', targetelf, env['SIZE'] + copt \
+    + ' $SOURCE')
+
+# program the flash with avrdude
+avrdude_command = env['AVRDUDE'] \
+    + ' -c ' + avrdude_programmer + ' -p ' + programmer_mcu
+
+if avrdude_port:
+    avrdude_command += ' -P ' + avrdude_port
+
+env.Command('writeflash', targethex, avrdude_command + ' -e -U flash:w:$SOURCE')
+
+env.Command('sshflash', targethex, 'cat "$SOURCE" "$SOURCE" | ' \
+    + 'ssh "' + ssh_flash_hostname + '" "' + avrdude_command + ' -e -U flash:w:-:i"')
+
+
+# create target commands
+env.Alias('elf', targetelf)
+env.Alias('disasm', targetdisasm)
+env.Alias('hex', targethex)
+env.Alias('ehex', targeteepromhex)
+env.Alias('install', 'writeflash')
+
+# default target (scons without parameters)
+Default(targetelf
+    , targethex, targeteepromhex
+    , targetdisasm
+    , 'size')
+
+# all done :)
