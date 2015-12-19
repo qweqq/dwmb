@@ -24,6 +24,7 @@ static inline void adc_start()
 {
     ADCSRA |= (1<<ADSC);
 }
+
 typedef enum {
     unplugged,
     plugged
@@ -31,8 +32,6 @@ typedef enum {
 
 state_t states[8];
 uint8_t current_state;
-
-
 
 static inline void lcd_on() {
     lcd_init();
@@ -44,7 +43,10 @@ static inline void lcd_off() {
     clearbit(LCD_BACKLIGHT_port, LCD_BACKLIGHT_pin);
 }
 
+uint16_t ticks_since_last_change = 0;
+
 void state_changed() {
+    ticks_since_last_change = 0;
     uart_write_byte('s');
     for (uint8_t i = 0; i < 8; i++) {
         if (states[i] == plugged) {
@@ -61,12 +63,11 @@ void state_changed() {
 
 ISR(ADC_vect) {
     if (states[current_state] == plugged) {
-        if (ADC > ADC_PLUGGED_LOW && ADC < ADC_PLUGGED_HIGH) {
+        if (!(ADC > ADC_PLUGGED_LOW && ADC < ADC_PLUGGED_HIGH)) {
+            states[current_state] = unplugged;
+            state_changed();
             return;
         }
-        states[current_state] = unplugged;
-        state_changed();
-        return;
     }
     if (states[current_state] == unplugged) {
         if (ADC > ADC_PLUGGED_LOW && ADC < ADC_PLUGGED_HIGH) {
@@ -74,8 +75,12 @@ ISR(ADC_vect) {
             state_changed();
             return;
         }
+    }
+    if (ticks_since_last_change > ADC_MAX_WAIT) {
+        state_changed();
         return;
     }
+    ticks_since_last_change++;
 }
 
 void next_slot() {

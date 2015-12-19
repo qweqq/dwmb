@@ -1,0 +1,165 @@
+$busy-light-color: red;
+$header-buttons-color: #016F54;
+$skin-image: "../img/bg1.jpg";
+
+@mixin background-image($image) {
+  background-image: url( $image );
+  background-size: contain;
+  background-size: cover;
+}
+
+body {
+  @include background-image( $skin-image );
+}
+
+.header {
+  height: 100px;
+  width: 98.25%;
+
+  margin-left: -8px;
+
+  padding: 10px 20px 10px 20px;
+}
+
+.header > .menu {
+  float: left;
+  height: 100%;
+  padding: 13px 33px 13px 33px;
+  vertical-align: top;
+  width: 84%;
+}
+
+.header > .logo {
+  float: left;
+}
+
+.menu > .user-buttons {
+  display: inline-block;
+  float: left;
+  position: relative;
+  width: 65%;
+}
+.user-buttons > .user_button {
+  display: inline-block;
+  margin-left: 10%;
+
+  border: 2px solid white;
+  border-radius: 4px;
+
+  padding: 25px 35px;
+
+  background-color: $header-buttons-color;
+}
+
+.content-container {
+  display: flex;
+  flex-flow: row;
+
+  position: absolute;
+  top: 50%;
+  
+  margin-left: -8px;
+
+  width: 100%;
+}
+
+.content-container > .board {
+  background-color: black;
+
+  width: 80%;
+  height: 145px;
+  
+  border: 1px solid black; 
+  border-radius: 10px;
+
+  margin: 0 auto;
+}
+
+.board > .lights {
+  display: flex;
+  flex-flow: row nowrap;
+
+  margin: auto;
+
+  height: 100%;
+  width: 95%;
+
+  list-style-type: none;
+}
+.lights > li.light {
+  background-color: white;
+
+  border: 1px solid white;
+  border-radius: 100%;
+
+  height: 90px;
+  width: 90px;
+
+  margin: 28px 16.5px;
+  position: relative;
+}
+.lights > li.light:not(.on) {
+  box-shadow: none;
+
+  -webkit-transition: box-shadow 1.5s, background-color 1.5s, border 1.5s;
+  transition: box-shadow 1.5s, background-color 1.5s, border 1.5s;
+}
+.lights > li.light.on {
+  box-shadow: 0px 0px 10px $busy-light-color;
+  background-color: $busy-light-color;
+  border: 1px solid $busy-light-color;
+
+  -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+  transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+}
+
+.board > .counter {
+  background-color: #333;
+  color: white;
+
+  font-weight: bold;
+  text-align: center;
+
+  width: 20%;
+
+  margin: 0 auto;
+}
+
+.menu > .subscribtion-buttons {
+  display: inline-block;
+
+  float: right;
+
+  position: relative;
+  width: 50px;
+
+  width: 34%;
+}
+.subscribtion-buttons > .subscribtion-button {
+  display: inline-block;
+  margin-left: 10%;
+
+  //border: 1px solid black;
+  //border-radius: 4px;
+
+  float: right;
+
+  height: 40px;
+  width: 40px;
+}
+.subscribtion-button.twitter {
+  @include background-image ( '../img/twitter.png' )
+}
+.subscribtion-button.telegram {
+  @include background-image ( '../img/telegram.png' )
+}
+
+.footer {
+  bottom: 0;
+
+  position: fixed;
+
+  text-align: center;
+
+  width: 100%;
+}
