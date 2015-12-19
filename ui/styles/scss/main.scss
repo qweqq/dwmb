@@ -1,6 +1,7 @@
-$busy-light-color: red;
+$busy-light-color: yellow;
 $header-buttons-color: #016F54;
-$skin-image: "../img/bg1.jpg";
+$header-buttons-text-color: white;
+$skin-image: "../img/bg2.jpg";
 
 @mixin background-image($image) {
   background-image: url( $image );
@@ -9,7 +10,8 @@ $skin-image: "../img/bg1.jpg";
 }
 
 body {
-  @include background-image( $skin-image );
+  //@include background-image( $skin-image );
+  background-color: #ddd;
 }
 
 .header {
@@ -43,12 +45,17 @@ body {
   display: inline-block;
   margin-left: 10%;
 
-  border: 2px solid white;
+  border-image: url( '' ) 27 27 27 27 round round;
+
+  border: 1px solid white;
   border-radius: 4px;
 
   padding: 25px 35px;
 
   background-color: $header-buttons-color;
+
+  font-weight: bold;
+  color: $header-buttons-text-color;
 }
 
 .content-container {
@@ -87,9 +94,9 @@ body {
   list-style-type: none;
 }
 .lights > li.light {
-  background-color: white;
+  background-color: grey;
 
-  border: 1px solid white;
+  border: 1px solid grey;
   border-radius: 100%;
 
   height: 90px;
@@ -121,6 +128,7 @@ body {
   text-align: center;
 
   width: 20%;
+  height: 25px;
 
   margin: 0 auto;
 }
@@ -152,6 +160,10 @@ body {
 }
 .subscribtion-button.telegram {
   @include background-image ( '../img/telegram.png' )
+}
+
+#login_form {
+  position: absolute;
 }
 
 .footer {
