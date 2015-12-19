@@ -4,12 +4,20 @@ import (
 	"log"
 
 	"dwmb/comm"
+	"dwmb/display"
 	"dwmb/request"
 	"dwmb/rfid"
 )
 
 func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
 	messages <- &comm.DisplayMessage{Message: text}
+}
+
+func processResponse(messages chan<- *comm.DisplayMessage, resp *request.Response) {
+	if resp.Message != "" {
+		messages <- &comm.DisplayMessage{Message: display.MakeMessage(resp.Message)}
+	}
+	return
 }
 
 func main() {
@@ -37,7 +45,7 @@ func main() {
 			if err != nil {
 				log.Print(err)
 			} else {
-				log.Printf("got response: %v\n", resp)
+				processResponse(messages, resp)
 			}
 		case tag = <-tags:
 			resp, err := server.SendTag(tag)
@@ -45,7 +53,7 @@ func main() {
 				quickMessage(messages, "error :(")
 				log.Print(err)
 			} else {
-				log.Printf("got response: %v\n", resp)
+				processResponse(messages, resp)
 			}
 		}
 	}
