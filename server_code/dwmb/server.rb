@@ -20,17 +20,42 @@ module Dwmb
       redirect '/index.html'
     end
 
+    post '/drop' do
+        User.all.destroy
+        Session.all.destroy
+        Card.all.destroy
+
+        adapter = DataMapper.repository(:default).adapter
+        adapter.execute("DELETE FROM dwmb_cards WHERE 1")
+        adapter.execute("DELETE FROM dwmb_users WHERE 1")
+        adapter.execute("DELETE FROM dwmb_sessions WHERE 1")
+
+        return "ok"
+    end
+
+    post '/dump' do
+        p User.all
+        p Session.all
+        p Card.all
+        return "ok"
+    end
+
     #data = {username: hsdfsd, email: dskj, password: dffdf, card: 1234}
     post '/register' do
-      user = JSON.parse(params["data"])
-      card = Card.create(cardid:user["rfid"])
-      return {status:"error", message:'Username taken'}.to_json if User.first(username:user["username"])
-      return {status:"error", message:'Email registered'}.to_json if User.first(email:user["email"])
-      u = User.new(username: user["username"],
-           email: user["email"],
-           password: user["password"],
-           card: card)
-      u.save
+      input = JSON.parse(params["data"])
+      user = User.first(code:input["code"])
+
+      puts "register: user: ", user
+
+      return {status:"error", message:'Username taken'}.to_json if User.first(username:input["username"])
+      return {status:"error", message:'Email registered'}.to_json if User.first(email:input["email"])
+
+      user.username = input["username"]
+      user.password = input["password"]
+      user.email = input["email"]
+      user.code = ""
+      user.save!
+
       {status:"ok", message:""}.to_json
     end
 
@@ -59,20 +84,20 @@ module Dwmb
 
     #***********************DEVICE**********************************************
 
-    #json: data = {card_id = xxxxxx}
+    #json: data = {rfid = xxxxxx}
     post '/poop' do
         rfid = JSON.parse(params["data"])["rfid"]
 
         card = Card.first(rfid:rfid)
-        user = if card then card.user else nil
+        user = if card then card.user else nil end
 
         if user
             if setup.on_ramp? rfid
-                setup.leaving = user
-                return {status: "ok", messgae: "bikedetach"}.to_json
+                setup.mark_user_for_leaving(user)
+                return {status: "ok", message: "disconnected"}.to_json
             else
                 setup.connecting = user
-                return {status: "ok", message: "bikeattach"}.to_json
+                return {status: "ok", message: "connnected"}.to_json
             end
         else
             code = sprintf '%05d', SecureRandom.random_number(99999)
@@ -81,8 +106,10 @@ module Dwmb
             card = Card.create(rfid:rfid)
             user.card = card
             user.code = code
-            user.save
-            return {status: "ok", message: "bikeattach", code: code}.to_json
+            user.save!
+
+            setup.connecting = user
+            return {status: "ok", message: "connnected", code: code}.to_json
         end
     end
     #message: ["bikedetach", "bikeattach"]
@@ -90,11 +117,16 @@ module Dwmb
     #json: data = {state = 8*[_], key = "xxxxx"}
     post '/alive' do
         response = JSON.parse(params["data"])
-        new_state = response["state"]
+        new_states = response["slots"]
         key = response["key"]
-        return {status:"error", message:"wrong key"}.to_json if key != Config::Key
-        message = setup.stateChanged new_state
-        return {status:"ok", message:message.to_s}.to_json
+
+        return {status:"error", message: "wrong key"}.to_json if key != Config::Key
+
+        message = setup.state_update(new_states)
+
+        return {status:"error", message: message.to_s}.to_json if message == :theft
+
+        return {status:"ok", message: message.to_s}.to_json
     end
     #message: ["connected", "theft", "left", "cable", "ok"]
 
