@@ -28,7 +28,8 @@ module Dwmb
         end
 
         def setTimers
-            @timer = @timers.after(3){
+            @timer = @timers.after(6){
+                puts "ALARM"
                 alarm.alarm = true
                 alarm.type = :device
                 alarm.slot = :none
@@ -49,10 +50,11 @@ module Dwmb
         end
 
         def state_update new_states
-            p "-------NOW---------"
-            p new_states
-            p current_slots
-            p "----------------"
+            @timer.reset
+            # p "-------NOW---------"
+            # p new_states
+            # p current_slots
+            # p "----------------"
 
             result = :ok
 
@@ -62,18 +64,24 @@ module Dwmb
                 new_state = new_states[index]
 
                 if (not current_slot_user and new_state == 1)
+                    # p "slot was empty, now it is full"
                     if @connecting
-                        current_slots[index] = [current_slot_user, :none]
+                        # p "we have a user to connect"
+                        current_slots[index] = [@connecting, :none]
                         @connecting = nil
                         result = :connected
                     else
+                        # p "someone is messing with cables"
                         result = :cable
                     end
                 elsif (current_slot_user and new_state == 0)
+                    # p "we had a full slot, now it is empty"
                     if current_slot_state == :leaving
+                        # p "the user has pooped and wants to get his bike!"
                         current_slots[index] = [nil, :none]
                         result = :left
                     else
+                        # p "the user has NOT pooped, and someone is stealing his bike"
                         current_slots[index] = [current_slot_user, :theft]
                         alarm.alarm = true
                         alarm.slot = index
@@ -83,10 +91,14 @@ module Dwmb
                 end
             end
 
-            p "-------AFTER---------"
-            p new_states
-            p current_slots
-            p "----------------"
+            if result == :ok
+                # p "nothing changed... no poop, no nothing"
+            end
+
+            # p "-------AFTER---------"
+            # p new_states
+            # p current_slots
+            # p "----------------"
 
             return result
         end

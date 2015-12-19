@@ -94,10 +94,10 @@ module Dwmb
         if user
             if setup.on_ramp? rfid
                 setup.mark_user_for_leaving(user)
-                return {status: "ok", message: "disconnected"}.to_json
+                return {status: "ok", message: "disconnecting"}.to_json
             else
                 setup.connecting = user
-                return {status: "ok", message: "connnected"}.to_json
+                return {status: "ok", message: "connecting"}.to_json
             end
         else
             code = sprintf '%05d', SecureRandom.random_number(99999)
@@ -109,7 +109,7 @@ module Dwmb
             user.save!
 
             setup.connecting = user
-            return {status: "ok", message: "connnected", code: code}.to_json
+            return {status: "ok", message: "connecting", code: code}.to_json
         end
     end
     #message: ["bikedetach", "bikeattach"]
@@ -124,7 +124,7 @@ module Dwmb
 
         message = setup.state_update(new_states)
 
-        return {status:"error", message: message.to_s}.to_json if message == :theft
+        return {status:"error", message: "theft"}.to_json if message == :theft
 
         return {status:"ok", message: message.to_s}.to_json
     end

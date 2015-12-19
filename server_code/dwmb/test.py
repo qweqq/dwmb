@@ -51,7 +51,7 @@ class Blah(unittest.TestCase):
 
 		print("response: " + str(the_page))
 
-	def test_angel(self):
+	def test_poop_alive(self):
 		result = self.send_request('/poop', {
 			'rfid' : '123'
 		})
@@ -68,6 +68,58 @@ class Blah(unittest.TestCase):
 			'key': "6x9=42"
 		})
 		self.assertEqual(result, '{"status":"ok","message":"connected"}')
+
+	def test_poop_register_alive(self):
+		result = self.send_request('/poop', {
+			'rfid' : '123'
+		})
+
+		result = json.loads(result)
+		print(result)
+		code = result["code"]
+		self.assertTrue("code" in result)
+
+		the_page = self.send_request('/register', {
+			'username' : 'ivankadraganova',
+			'password' : 'password',
+			'email' : 'ivanka@abv.bg',
+			'code' : code
+		})
+
+		result = self.send_request('/alive', {
+			'slots': [
+				1, 0, 0, 0, 0, 0, 0, 0
+			],
+			'key': "6x9=42"
+		})
+		self.assertEqual(result, '{"status":"ok","message":"connected"}')
+
+	def test_theft(self):
+
+		result = self.send_request('/poop', {
+			'rfid' : '123'
+		})
+
+		result = json.loads(result)
+		print(result)
+		code = result["code"]
+		self.assertTrue("code" in result)
+
+		result = self.send_request('/alive', {
+			'slots': [
+				1, 0, 0, 0, 0, 0, 0, 0
+			],
+			'key': "6x9=42"
+		})
+		self.assertEqual(result, '{"status":"ok","message":"connected"}')
+
+		result = self.send_request('/alive', {
+			'slots': [
+				0, 0, 0, 0, 0, 0, 0, 0
+			],
+			'key': "6x9=42"
+		})
+		self.assertEqual(result, '{"status":"error","message":"theft"}')
 
 	def test_drop(self):
 		pass
