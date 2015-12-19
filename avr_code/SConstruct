@@ -18,7 +18,7 @@
 # -------- configuration options ---------
 
 # project name (use a single word, e.g. "myprj")
-pname = 'dwmb_mega8'
+pname = 'dood_mega8'
 
 # target chip name (as required by avr-gcc, e.g. atmega8)
 mcu = 'atmega8'
@@ -29,7 +29,7 @@ programmer_mcu = 'm8'
 # source files
 # .c, .cpp or .S (NOT .s !!! for asm)
 # example: ['main.c', 'foo.c', 'lowlevel.S']
-sources = ['main.c']
+sources = ['main.c', 'lcd_2_16.c', 'simple_uart.c', 'text.c', 'leds.c']
 
 # additional options (e.g. '-I/path/to/mydir', '-lmylib')
 options = []
