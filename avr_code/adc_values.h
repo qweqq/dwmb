@@ -1,0 +1,2 @@
+#define ADC_PLUGGED_LOW     600
+#define ADC_PLUGGED_HIGH    640
