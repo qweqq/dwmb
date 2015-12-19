@@ -4,6 +4,7 @@ require_relative 'config'
 
 module Dwmb
 
+  puts Config::Database
   DataMapper.setup(:default, Config::Database)
 
   class Card
