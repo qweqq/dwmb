@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"dwmb/comm"
+	"dwmb/request"
 )
 
 func main() {
@@ -13,22 +13,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	server := request.NewServer("http://do", "6x9=42")
+
 	state := &comm.State{Message: ""}
 	for {
-		state = <-states
-		fmt.Printf("state: %v %s\n", state.Slots, state.Message)
+		select {
+		case state = <-states:
+			server.SendState(state)
+		}
 	}
 	return
-	/*
-		resp, err := http.Get("https://archlinux.org")
-		if err != nil {
-			log.Fatal(err)
-		}
-		body, err := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Printf("resp: %s\n", body)
-	*/
+
 }

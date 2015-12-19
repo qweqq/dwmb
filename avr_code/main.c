@@ -125,10 +125,10 @@ int main()
     leds[4] = yellow;
     for (;;) {
         next_slot();
-        _delay_ms(500);
+        _delay_ms(50);
         uart_write_string("a\n");
         adc_start();
-        _delay_ms(1500);
+        _delay_ms(50);
     }
     return 0;
 }
