@@ -23,8 +23,8 @@ module Dwmb
 
     post '/try' do
         slots = JSON.parse(params["data"])["slots"]
-        setup.currentSlots.each_with_index do |hole, index|
-            setup.currentSlots[index] = slots[index]
+        setup.current_slots.each_with_index do |hole, index|
+            setup.current_slots[index] = slots[index]
             puts "old: #{hole} new: #{slots[index]}"
         end
         return {status:"ok", message:"gsgs gs"}.to_json
@@ -56,13 +56,48 @@ module Dwmb
       {status:"ok", session_id:session_id}.to_json
     end
 
+    #json: data = {card_id = xxxxxx}
+    post '/poop' do
+        card_id = JSON.parse(params["data"])[card_id]
+        user = User.first(card:card_id)
+
+        if user
+            if status.on_ramp? card_id
+                setup.leaving = user
+                return {status: "ok", messgae: "bikedetach"}
+            else
+                setup.connecting = user
+                return {status: "ok", message: "bikeattach", code: code}
+            end
+        else
+            user = User.new
+            user.username = "Unknown"
+            user.card = card_id
+            user.code = sprintf '%05d', SecureRandom.random_number(99999)
+            user.save
+            return {status: "ok", message: "bikeattach", code: code}
+        end
+    end
+    #message: ["bikedetach", "bikeattach"]
+
+    #json: data = {state = 8*[_], key = "xxxxx"}
+    post '/alive' do
+        response = JSON.parse(params["data"])
+        new_state = response["state"]
+        key = response["key"]
+        return {status:"error", message:"wrong key"}.to_json if key != Config::Key
+        message = setup.stateChanged new_state
+        return {status:"ok", message:message.to_s}.to_json
+    end
+    #message: ["connected", "theft", "left", "cable", "ok"]
+
     post '/secret' do
       session_id = JSON.parse(params["data"])["session_id"]
       session = Session.first(session_id:session_id)
       if session
-        return {status:"ok", messgae:""}.to_json
+        return {status:"ok", message:""}.to_json
       else
-        return {status:"error", messgae:"Log in, you fuck"}.to_json
+        return {status:"error", message:"Log in, you fuck"}.to_json
       end
     end
   end

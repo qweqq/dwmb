@@ -1,8 +1,10 @@
 require 'rubygems'
 require 'data_mapper'
+require_relative 'config'
 
 module Dwmb
-  DataMapper.setup(:default, 'sqlite:///home/do/geek/dwmb/dwmb/database.db')
+
+  DataMapper.setup(:default, Config::Database)
 
   class Card
     include DataMapper::Resource
@@ -15,10 +17,10 @@ module Dwmb
   class User
     include DataMapper::Resource
     property :id,         Serial
-    property :email,       String
+    property :email,      String
     property :username,   String
     property :password,   BCryptHash
-
+    property :code,       String
     has 1, :card
     has n, :sessions
   end
