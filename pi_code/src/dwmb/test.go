@@ -29,7 +29,7 @@ func main() {
 		case state = <-states:
 			server.SendState(state)
 		case tag = <-tags:
-			fmt.Printf("tag: %s, %s\n", tag.CardType, tag.SerialNumber)
+			fmt.Printf("tag: %s\n", tag.Hash())
 		}
 	}
 	return

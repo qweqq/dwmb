@@ -2,6 +2,8 @@ package rfid
 
 import (
 	"bufio"
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"os"
@@ -11,6 +13,11 @@ import (
 type Tag struct {
 	CardType     string
 	SerialNumber string
+}
+
+func (t *Tag) Hash() string {
+	sum := sha256.Sum256([]byte(t.CardType + ":" + t.SerialNumber))
+	return base64.URLEncoding.EncodeToString(sum[:])
 }
 
 func makeTag(text string) (*Tag, error) {
