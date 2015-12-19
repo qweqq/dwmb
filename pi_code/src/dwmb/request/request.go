@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 
 	"dwmb/comm"
+	"dwmb/rfid"
 )
 
 type Server struct {
@@ -18,6 +20,11 @@ type Server struct {
 type stateMessage struct {
 	Slots [8]int `json:"slots"`
 	Key   string `json:"key"`
+}
+
+type tagMessage struct {
+	Hash string `json:"rfid"`
+	Key  string `json:"key"`
 }
 
 func NewServer(baseUrl string, Key string) *Server {
@@ -40,7 +47,24 @@ func (s *Server) SendState(state *comm.State) error {
 	return nil
 }
 
+func (s *Server) SendTag(tag *rfid.Tag) error {
+	data, err := json.Marshal(&tagMessage{
+		Hash: tag.Hash(),
+		Key:  s.Key,
+	})
+	if err != nil {
+		return err
+	}
+	resp, err := s.request("poop", string(data))
+	if err != nil {
+		return err
+	}
+	fmt.Printf("resp: %s\n", string(resp))
+	return nil
+}
+
 func (s *Server) request(link string, data string) ([]byte, error) {
+	log.Printf("sending request at %s with data: %s\n", link, data)
 	resp, err := http.PostForm(fmt.Sprintf("%s/%s", s.BaseUrl, link),
 		url.Values{"data": {data}},
 	)

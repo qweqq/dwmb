@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"dwmb/comm"
@@ -20,16 +19,22 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server := request.NewServer("http://do", "6x9=42")
+	server := request.NewServer("http://do:1234", "6x9=42")
 
 	state := &comm.State{Message: ""}
 	tag := &rfid.Tag{}
 	for {
 		select {
 		case state = <-states:
-			server.SendState(state)
+			err := server.SendState(state)
+			if err != nil {
+				log.Print(err)
+			}
 		case tag = <-tags:
-			fmt.Printf("tag: %s\n", tag.Hash())
+			err := server.SendTag(tag)
+			if err != nil {
+				log.Print(err)
+			}
 		}
 	}
 	return
