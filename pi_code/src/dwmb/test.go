@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"dwmb/comm"
 	"dwmb/display"
@@ -13,10 +14,12 @@ func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
 	messages <- &comm.DisplayMessage{Message: text}
 }
 
-func processResponse(messages chan<- *comm.DisplayMessage, resp *request.Response) {
+func processResponse(messages chan<- *comm.DisplayMessage, messageTimer *time.Timer, resp *request.Response) {
 	log.Printf("got response: %v\n", resp)
-	if resp.Message != "" {
-		messages <- &comm.DisplayMessage{Message: display.MakeMessage(resp.Message)}
+	if resp.Message != "" && resp.Message != "ok" {
+		text, timeout := display.MakeMessage(resp)
+		messageTimer.Reset(timeout * time.Second)
+		messages <- &comm.DisplayMessage{Message: text}
 	}
 	return
 }
@@ -37,7 +40,15 @@ func main() {
 	state := &comm.State{Message: ""}
 	tag := &rfid.Tag{}
 
-	messages <- &comm.DisplayMessage{Message: "foo\nbar"}
+	messages <- &comm.DisplayMessage{Message: "hi!"}
+
+	messageTimer := time.NewTimer(3 * time.Second)
+	go func() {
+		for {
+			<-messageTimer.C
+			messages <- &comm.DisplayMessage{Message: ""}
+		}
+	}()
 
 	for {
 		select {
@@ -46,7 +57,7 @@ func main() {
 			if err != nil {
 				log.Print(err)
 			} else {
-				processResponse(messages, resp)
+				processResponse(messages, messageTimer, resp)
 			}
 		case tag = <-tags:
 			resp, err := server.SendTag(tag)
@@ -54,10 +65,8 @@ func main() {
 				quickMessage(messages, "error :(")
 				log.Print(err)
 			} else {
-				processResponse(messages, resp)
+				processResponse(messages, messageTimer, resp)
 			}
 		}
 	}
-	return
-
 }
