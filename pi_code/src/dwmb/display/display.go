@@ -23,6 +23,10 @@ func MakeMessage(resp *request.Response) (string, time.Duration) {
 		return "Bike attached", 6
 	case "cable":
 		return "Don't touch me!", 6
+	case "disconnecting":
+		return "You can detach\nyour bike!", 30
+	case "disconnected":
+		return "Goodbye ^-^", 6
 	default:
 		return "Unknown message", 6
 	}
