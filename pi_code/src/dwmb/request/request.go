@@ -12,6 +12,12 @@ import (
 	"dwmb/rfid"
 )
 
+const (
+	Free     = 0
+	Occupied = 1
+	Alarm    = 2
+)
+
 type Server struct {
 	BaseUrl string
 	Key     string
@@ -31,6 +37,7 @@ type Response struct {
 	Status   string `json:"status"`
 	Message  string `json:"message"`
 	CardCode string `json:"code"`
+	Slots    [8]int `json:"slots"`
 }
 
 func NewServer(baseUrl string, Key string) *Server {

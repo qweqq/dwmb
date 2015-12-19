@@ -94,5 +94,20 @@ func send(f *serial.Port, displayMessages <-chan *DisplayMessage) {
 		} else {
 			f.Write([]byte("o\n"))
 		}
+		if message.Lights != nil {
+			f.Write([]byte("l"))
+			for lamp := range message.Lights {
+				switch lamp {
+				case Off:
+					f.Write([]byte("o"))
+				case Red:
+					f.Write([]byte("r"))
+				case Green:
+					f.Write([]byte("g"))
+				case Yellow:
+					f.Write([]byte("y"))
+				}
+			}
+		}
 	}
 }
