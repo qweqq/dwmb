@@ -1,34 +1,54 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"dwmb/comm"
+	"dwmb/request"
+	"dwmb/rfid"
 )
 
+func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
+	messages <- &comm.DisplayMessage{Message: text}
+}
+
 func main() {
-	states, _, err := comm.Init("/dev/ttyAMA0", 115200)
+	states, messages, err := comm.Init("/dev/ttyAMA0", 115200)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	tags, err := rfid.Init("/tmp/poop")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	server := request.NewServer("http://do:1234", "6x9=42")
+
 	state := &comm.State{Message: ""}
+	tag := &rfid.Tag{}
+
+	messages <- &comm.DisplayMessage{Message: "foo\nbar"}
+
 	for {
-		state = <-states
-		fmt.Printf("state: %s\n", state.Message)
+		select {
+		case state = <-states:
+			resp, err := server.SendState(state)
+			if err != nil {
+				log.Print(err)
+			} else {
+				log.Printf("got response: %v\n", resp)
+			}
+		case tag = <-tags:
+			resp, err := server.SendTag(tag)
+			if err != nil {
+				quickMessage(messages, "error :(")
+				log.Print(err)
+			} else {
+				log.Printf("got response: %v\n", resp)
+			}
+		}
 	}
 	return
-	/*
-		resp, err := http.Get("https://archlinux.org")
-		if err != nil {
-			log.Fatal(err)
-		}
-		body, err := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Printf("resp: %s\n", body)
-	*/
+
 }

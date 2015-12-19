@@ -1,14 +1,26 @@
 ( function () {
-
-  console.log('bar');
+  var menuUrl = "../main-header.html";
+  var contentUrl = "../main-content.html";
+  var jsUrl = "main.js";
 
   $.ajax({
-    url: "../main-header.html",
+    url: menuUrl,
     context: document.body
   }).done( function( data ) {
     $( '.menu' ).append( data );
-
-    console.log('foo');
   });
 
+  $.ajax({
+    url: contentUrl,
+    context: document.body
+  }).done( function( data ) {
+    $( '.content-container' ).append( data );
+  });
+
+  $.ajax({
+    url: jsUrl,
+    context: document.body
+  }).done( function( data ) {
+    eval( data );
+  });
 } )();

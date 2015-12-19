@@ -12,13 +12,21 @@ const (
 	Plugged   = 1
 )
 
+const (
+	Off    = 0
+	Red    = 1
+	Green  = 2
+	Yellow = 3
+)
+
 type State struct {
-	States  [8]int
+	Slots   [8]int
 	Message string
 }
 
 type DisplayMessage struct {
 	Message string
+	Lights  *[8]int
 }
 
 func Init(device string, baud int) (chan *State, chan *DisplayMessage, error) {
@@ -29,12 +37,26 @@ func Init(device string, baud int) (chan *State, chan *DisplayMessage, error) {
 	if err != nil {
 		return stateMessages, displayMessages, err
 	}
+
 	go receive(f, stateMessages)
+	go send(f, displayMessages)
+
 	return stateMessages, displayMessages, nil
 }
 
 func makeState(data string) *State {
-	return &State{Message: data}
+	state := &State{Message: data}
+	if data[0] == 's' {
+		for i := 1; i < len(data); i++ {
+			switch data[i] {
+			case 'p':
+				state.Slots[i-1] = Plugged
+			case 'u':
+				state.Slots[i-1] = Unplugged
+			}
+		}
+	}
+	return state
 }
 
 func receive(f *serial.Port, stateMessages chan<- *State) {
@@ -52,9 +74,25 @@ func receive(f *serial.Port, stateMessages chan<- *State) {
 		}
 		data += string(buf[:n])
 
-		if data[len(data)-1] == '\n' {
-			stateMessages <- makeState(strings.TrimSpace(data))
-			data = ""
+		portions := strings.Split(data, "\n")
+		for _, portion := range portions[:len(portions)-1] {
+			if len(portion) > 0 {
+				if portion[0] == 's' {
+					stateMessages <- makeState(portion)
+				}
+			}
+		}
+		data = portions[len(portions)-1]
+	}
+}
+
+func send(f *serial.Port, displayMessages <-chan *DisplayMessage) {
+	for {
+		message := <-displayMessages
+		if message.Message != "" {
+			f.Write([]byte("d" + strings.Replace(message.Message, "\n", "\v", -1) + "\n"))
+		} else {
+			f.Write([]byte("o\n"))
 		}
 	}
 }
