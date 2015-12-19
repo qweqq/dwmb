@@ -8,8 +8,12 @@ import (
 	"dwmb/rfid"
 )
 
+func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
+	messages <- &comm.DisplayMessage{Message: text}
+}
+
 func main() {
-	states, _, err := comm.Init("/dev/ttyAMA0", 115200)
+	states, messages, err := comm.Init("/dev/ttyAMA0", 115200)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,17 +27,25 @@ func main() {
 
 	state := &comm.State{Message: ""}
 	tag := &rfid.Tag{}
+
+	messages <- &comm.DisplayMessage{Message: "foo\nbar"}
+
 	for {
 		select {
 		case state = <-states:
-			err := server.SendState(state)
+			resp, err := server.SendState(state)
 			if err != nil {
 				log.Print(err)
+			} else {
+				log.Printf("got response: %v\n", resp)
 			}
 		case tag = <-tags:
-			err := server.SendTag(tag)
+			resp, err := server.SendTag(tag)
 			if err != nil {
+				quickMessage(messages, "error :(")
 				log.Print(err)
+			} else {
+				log.Printf("got response: %v\n", resp)
 			}
 		}
 	}

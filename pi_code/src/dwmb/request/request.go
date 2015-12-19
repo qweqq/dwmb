@@ -27,54 +27,58 @@ type tagMessage struct {
 	Key  string `json:"key"`
 }
 
+type Response struct {
+	Status   string `json:"status"`
+	Message  string `json:"message"`
+	CardCode string `json:"code"`
+}
+
 func NewServer(baseUrl string, Key string) *Server {
 	return &Server{BaseUrl: baseUrl, Key: Key}
 }
 
-func (s *Server) SendState(state *comm.State) error {
+func (s *Server) SendState(state *comm.State) (*Response, error) {
 	data, err := json.Marshal(&stateMessage{
 		Slots: state.Slots,
 		Key:   s.Key,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	resp, err := s.request("alive", string(data))
-	if err != nil {
-		return err
-	}
-	fmt.Printf("resp: %s\n", string(resp))
-	return nil
+	return s.request("alive", string(data))
 }
 
-func (s *Server) SendTag(tag *rfid.Tag) error {
+func (s *Server) SendTag(tag *rfid.Tag) (*Response, error) {
 	data, err := json.Marshal(&tagMessage{
 		Hash: tag.Hash(),
 		Key:  s.Key,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	resp, err := s.request("poop", string(data))
-	if err != nil {
-		return err
-	}
-	fmt.Printf("resp: %s\n", string(resp))
-	return nil
+	return s.request("poop", string(data))
 }
 
-func (s *Server) request(link string, data string) ([]byte, error) {
+func (s *Server) request(link string, data string) (*Response, error) {
 	log.Printf("sending request at %s with data: %s\n", link, data)
 	resp, err := http.PostForm(fmt.Sprintf("%s/%s", s.BaseUrl, link),
 		url.Values{"data": {data}},
 	)
 	if err != nil {
-		return make([]byte, 0), err
+		return nil, err
 	}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return make([]byte, 0), err
+		return nil, err
 	}
-	return body, nil
+
+	response := &Response{}
+	err = json.Unmarshal(body, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }
