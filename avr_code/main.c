@@ -90,6 +90,7 @@ void next_slot() {
 }
 
 void process_command(char* command) {
+    uint8_t i;
     switch(command[0]) {
         case 'd':
             lcd_on();
@@ -106,6 +107,25 @@ void process_command(char* command) {
         case 'o':
             lcd_off();
             return;
+        case 'l':
+            i = 0;
+            for (char* c = &(command[1]); *c != '\0'; c++) {
+                switch(*c) {
+                    case 'o':
+                        leds[i] = off;
+                        break;
+                    case 'r':
+                        leds[i] = red;
+                        break;
+                    case 'g':
+                        leds[i] = green;
+                        break;
+                    case 'y':
+                        leds[i] = yellow;
+                        break;
+                }
+                i++;
+            }
     }
 }
 
@@ -151,8 +171,6 @@ int main()
 {
     _delay_ms(2500);
     init();
-    leds[3] = green;
-    leds[4] = yellow;
     for (;;) {
         next_slot();
         _delay_ms(50);

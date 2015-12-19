@@ -1,9 +1,9 @@
 #pragma once
 
-typedef enum { 
-    off = 0x00, 
-    red = 0x01, 
-    green = 0x02, 
+typedef enum {
+    off = 0x00,
+    green = 0x01,
+    red = 0x02, 
     yellow = 0x03
 } led_colour;
 
