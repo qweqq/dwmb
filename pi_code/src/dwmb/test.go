@@ -14,6 +14,7 @@ func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
 }
 
 func processResponse(messages chan<- *comm.DisplayMessage, resp *request.Response) {
+	log.Printf("got response: %v\n", resp)
 	if resp.Message != "" {
 		messages <- &comm.DisplayMessage{Message: display.MakeMessage(resp.Message)}
 	}
