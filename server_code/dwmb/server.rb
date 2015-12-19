@@ -20,9 +20,10 @@ module Dwmb
       redirect '/index.html'
     end
 
+    #data = {username: hsdfsd, email: dskj, password: dffdf, card: 1234}
     post '/register' do
       user = JSON.parse(params["data"])
-      card = Card.create(cardid:"42")
+      card = Card.create(cardid:user["rfid"])
       return {status:"error", message:'Username taken'}.to_json if User.first(username:user["username"])
       return {status:"error", message:'Email registered'}.to_json if User.first(email:user["email"])
       u = User.new(username: user["username"],
@@ -60,14 +61,13 @@ module Dwmb
 
     #json: data = {card_id = xxxxxx}
     post '/poop' do
-        card_id = JSON.parse(params["data"])["card_id"]
+        rfid = JSON.parse(params["data"])["rfid"]
 
-        card_by_id = Card.first(cardid:card_id)
-        user = nil
-        user = card_by_id.user if (card_by_id)
+        card = Card.first(rfid:rfid)
+        user = if card then card.user else nil
 
         if user
-            if setup.on_ramp? card_id
+            if setup.on_ramp? rfid
                 setup.leaving = user
                 return {status: "ok", messgae: "bikedetach"}.to_json
             else
@@ -78,7 +78,7 @@ module Dwmb
             code = sprintf '%05d', SecureRandom.random_number(99999)
             user = User.new
             user.username = "Unknown"
-            card = Card.create(cardid:card_id)
+            card = Card.create(rfid:rfid)
             user.card = card
             user.code = code
             user.save

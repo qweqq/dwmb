@@ -28,9 +28,9 @@ module Dwmb
             setTimers
         end
 
-        def on_ramp? card_id
+        def on_ramp? rfid
             current_slots.each do |user|
-                return true if user and user.card.cardid == card_id
+                return true if user and user.card.rfid == rfid
             end
             return false
         end
