@@ -87,7 +87,7 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
 
-		self.assertEqual(result, '{"status":"ok","message":"connected"}')
+		self.assertEqual(result, '{"status":"ok","message":"connected","slots":[1,0,0,0,0,0,0,0]}')
 
 	def test_poop_register_alive1(self):
 		result, code = self.send_default_poop()
@@ -96,7 +96,7 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
 
-		self.assertEqual(result, '{"status":"ok","message":"connected"}')
+		self.assertEqual(result, '{"status":"ok","message":"connected","slots":[1,0,0,0,0,0,0,0]}')
 
 	def test_theft(self):
 		result, code = self.send_default_poop()
@@ -105,7 +105,7 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
 
-		self.assertEqual(result, '{"status":"error","message":"theft"}')
+		self.assertEqual(result, '{"status":"error","message":"theft","slots":[2,0,0,0,0,0,0,0]}')
 
 	def test_poop_alive1_poop_alive0(self):
 		result, code = self.send_default_poop()
@@ -116,7 +116,7 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
 
-		self.assertEqual(result, '{"status":"ok","message":"disconnected"}')
+		self.assertEqual(result, '{"status":"ok","message":"disconnected","slots":[0,0,0,0,0,0,0,0]}')
 
 	def test_poop_register_alive1_poop_alive0(self):
 		result, code = self.send_default_poop()
@@ -129,7 +129,7 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
 
-		self.assertEqual(result, '{"status":"ok","message":"disconnected"}')
+		self.assertEqual(result, '{"status":"ok","message":"disconnected","slots":[0,0,0,0,0,0,0,0]}')
 
 	def test_poop_poop(self):
 		result, code = self.send_default_poop()

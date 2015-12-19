@@ -99,9 +99,17 @@ module Dwmb
         user = if card then card.user else nil end
 
         if user
-            if setup.on_ramp? rfid
-                setup.mark_user_for_leaving(user)
-                return {status: "ok", message: "disconnecting"}.to_json
+            user_on_ramp = setup.on_ramp(rfid)
+            if user_on_ramp
+                if setup.current_slots[user_on_ramp][1] == :theft
+                    setup.current_slots[user_on_ramp][1] = :none
+                    setup.reset_alarm
+                    setup.mark_user_for_leaving(user)
+                    return {status: "ok", message: "disconnected"}.to_json
+                else
+                    setup.mark_user_for_leaving(user)
+                    return {status: "ok", message: "disconnecting"}.to_json
+                end
             else
                 setup.connecting = user
                 return {status: "ok", message: "connecting"}.to_json
@@ -125,7 +133,7 @@ module Dwmb
     post '/alive' do
         data = JSON.parse(params["data"])
         new_states = data["slots"]
-        key = response["key"]
+        key = data["key"]
 
         response = {
             status: "ok",
@@ -134,15 +142,18 @@ module Dwmb
         }
 
         if key != Config::Key
-            response['status'] = "error"
-            response['message'] = "wrong key"
+            response[:status] = "error"
+            response[:message] = "wrong key"
         else
             message = setup.state_update(new_states)
-            response['status'] = if message == :theft then 'error' else 'ok' end
-            response['message'] = message.to_s
+            response[:status] = if message == :theft then 'error' else 'ok' end
+            response[:message] = message.to_s
         end
-        response['slots'] = setup.serialise_slots
 
+
+        response[:slots] = setup.serialise_slots
+
+        #puts response.to_json
         return response.to_json
     end
     #message: ["connected", "theft", "disconnected", "cable", "ok"]
