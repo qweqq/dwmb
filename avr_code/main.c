@@ -133,10 +133,6 @@ static inline void init() {
     DDRC = DDRC_STATE;
     DDRD = DDRD_STATE;
 
-    DDRD = ~0x01;    // all outputs
-    DDRB = 0x07;
-    DDRC = ~0x01;
-
     lcd_init();
     adc_init();
     uart_init();
