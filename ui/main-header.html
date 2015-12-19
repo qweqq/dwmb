@@ -1,6 +1,32 @@
 <div class="user-buttons">
-  <div class="login user_button">Влез</div>
-  <div class="register user_button">Регистрация</div>
+  <div id="login" class="user_button">ВХОД</div>
+  <form id="login_form" action="#" hidden="hidden">
+    Потребителско име * <input type="text" name="username"><br>
+    Парола * <input type="password" name="password"><br>
+    <input type="button" value="ПРОДЪЛЖИ">
+  </form>
+  <div id="register" class="user_button">РЕГИСТРАЦИЯ</div>
+
+  <form id="registration_form" action="#" hidden="hidden">
+    <div>
+      <h3>Въвеждане на код</h3>
+      <section>
+          <form action="">
+            <p>Моля, въведи кода, който си получил от охранителното устройство след чекиране на ISIC карта:</p>
+            <input type="text" name="validation_code">
+            <!-- <input type="submit" value="Продължи"> -->
+          </form> 
+      </section>
+      <h3>Вече може да се регистрираш</h3>
+      <section>
+          <form action="">
+            Потребителско име * <input type="text" name="username"><br>
+            Парола * <input type="password" name="password"><br>
+            <!-- <input type="submit" value="Продължи"> -->
+          </form> 
+      </section>
+    </div>
+  </form>
 </div>
 <div class="subscribtion-buttons">
   <div class="subscribtion-button twitter">

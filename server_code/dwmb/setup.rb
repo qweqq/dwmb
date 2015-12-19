@@ -28,12 +28,31 @@ module Dwmb
         end
 
         def setTimers
-            @timer = @timers.after(6){
+            @timer = @timers.after(3){
                 puts "ALARM"
                 alarm.alarm = true
                 alarm.type = :device
                 alarm.slot = :none
             }
+        end
+
+        def serialise_slots
+            serialised_slots = []
+            current_slots.each_with_index do |slot, index|
+                user = slot[0]
+                state = slot[1]
+                if user
+                    serialised_slots[index] = if state == :theft then 2 else 1 end 
+                else
+                    serialised_slots[index] = 0
+                end
+            end
+        end
+
+        def reset_alarm
+            if alarm.alarm
+                alarm = Alarm.new
+            end
         end
 
         def mark_user_for_leaving(user)
@@ -51,10 +70,12 @@ module Dwmb
 
         def state_update new_states
             @timer.reset
-            # p "-------NOW---------"
-            # p new_states
-            # p current_slots
-            # p "----------------"
+            reset_alarm if alarm.alarm
+
+            p "|-------NOW---------"
+            p "| ", new_states
+            p "| ", current_slots
+            p "|----------------"
 
             result = :ok
 
@@ -64,24 +85,24 @@ module Dwmb
                 new_state = new_states[index]
 
                 if (not current_slot_user and new_state == 1)
-                    # p "slot was empty, now it is full"
+                    p "|slot was empty, now it is full"
                     if @connecting
-                        # p "we have a user to connect"
-                        current_slots[index] = [@connecting, :none]
+                        p "|we have a user to connect"
+                        @current_slots[index] = [@connecting, :none]
                         @connecting = nil
                         result = :connected
                     else
-                        # p "someone is messing with cables"
+                        p "|someone is messing with cables"
                         result = :cable
                     end
                 elsif (current_slot_user and new_state == 0)
-                    # p "we had a full slot, now it is empty"
+                    p "|we had a full slot, now it is empty"
                     if current_slot_state == :leaving
-                        # p "the user has pooped and wants to get his bike!"
+                        p "|the user has pooped and wants to get his bike!"
                         current_slots[index] = [nil, :none]
-                        result = :left
+                        result = :disconnected
                     else
-                        # p "the user has NOT pooped, and someone is stealing his bike"
+                        p "|the user has NOT pooped, and someone is stealing his bike"
                         current_slots[index] = [current_slot_user, :theft]
                         alarm.alarm = true
                         alarm.slot = index
@@ -92,13 +113,13 @@ module Dwmb
             end
 
             if result == :ok
-                # p "nothing changed... no poop, no nothing"
+                p "|nothing changed... no poop, no nothing"
             end
 
-            # p "-------AFTER---------"
-            # p new_states
-            # p current_slots
-            # p "----------------"
+            p "|-------AFTER---------"
+            p "|, ", new_states
+            p "|, ", current_slots
+            p "|----------------"
 
             return result
         end
