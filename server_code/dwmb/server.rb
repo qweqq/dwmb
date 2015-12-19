@@ -23,8 +23,8 @@ module Dwmb
 
     post '/try' do
         slots = JSON.parse(params["data"])["slots"]
-        setup.currentSlots.each_with_index do |hole, index|
-            setup.currentSlots[index] = slots[index]
+        setup.current_slots.each_with_index do |hole, index|
+            setup.current_slots[index] = slots[index]
             puts "old: #{hole} new: #{slots[index]}"
         end
         return {status:"ok", message:"gsgs gs"}.to_json
@@ -56,13 +56,31 @@ module Dwmb
       {status:"ok", session_id:session_id}.to_json
     end
 
+    #json: data = {card_id = xxxxxx}
+    post '/poop' do
+        response = JSON.parse(params["data"])
+
+        status.on_ramp?
+    end
+
+    #json: data = {state = 8*[_], key = "xxxxx"}
+    post '/alive' do
+        response = JSON.parse(params["data"])
+        new_state = response["state"]
+        key = response["key"]
+        return {status:"error", message:"wrong key"}.to_json if key != Config::Key
+        message = setup.stateChanged new_state
+        return {status:"ok", message:message.to_s}.to_json if message == :ok
+        return {status:"error", message: message.to_s}.to_json
+    end
+
     post '/secret' do
       session_id = JSON.parse(params["data"])["session_id"]
       session = Session.first(session_id:session_id)
       if session
-        return {status:"ok", messgae:""}.to_json
+        return {status:"ok", message:""}.to_json
       else
-        return {status:"error", messgae:"Log in, you fuck"}.to_json
+        return {status:"error", message:"Log in, you fuck"}.to_json
       end
     end
   end
