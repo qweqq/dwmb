@@ -16,7 +16,7 @@ func main() {
 	state := &comm.State{Message: ""}
 	for {
 		state = <-states
-		fmt.Printf("state: %s\n", state.Message)
+		fmt.Printf("state: %v %s\n", state.Slots, state.Message)
 	}
 	return
 	/*

@@ -13,7 +13,7 @@ const (
 )
 
 type State struct {
-	States  [8]int
+	Slots   [8]int
 	Message string
 }
 
@@ -34,7 +34,18 @@ func Init(device string, baud int) (chan *State, chan *DisplayMessage, error) {
 }
 
 func makeState(data string) *State {
-	return &State{Message: data}
+	state := &State{Message: data}
+	if data[0] == 's' {
+		for i := 1; i < len(data); i++ {
+			switch data[i] {
+			case 'p':
+				state.Slots[i-1] = Plugged
+			case 'u':
+				state.Slots[i-1] = Unplugged
+			}
+		}
+	}
+	return state
 }
 
 func receive(f *serial.Port, stateMessages chan<- *State) {
@@ -52,9 +63,14 @@ func receive(f *serial.Port, stateMessages chan<- *State) {
 		}
 		data += string(buf[:n])
 
-		if data[len(data)-1] == '\n' {
-			stateMessages <- makeState(strings.TrimSpace(data))
-			data = ""
+		portions := strings.Split(data, "\n")
+		for _, portion := range portions[:len(portions)-1] {
+			if len(portion) > 0 {
+				if portion[0] == 's' {
+					stateMessages <- makeState(portion)
+				}
+			}
 		}
+		data = portions[len(portions)-1]
 	}
 }
