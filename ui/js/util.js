@@ -1,12 +1,16 @@
 var HELPERS_MODULE = (function () {
   return {
     switchOnSlot: function ( indexOfSlot ) {
-      console.log('yiss');
       $( "#board1 [data-id='" + indexOfSlot + "']" ).addClass( 'on' );
+
+      var slotsNumber = $( '#freeSlots' ).html();
+      $( '#freeSlots' ).html( parseInt( slotsNumber ) - 1 );
     },
     switchOffSlot: function ( indexOfSlot ) {
-      console.log('noo');
       $( "#board1 [data-id='" + indexOfSlot + "']" ).removeClass( 'on' );
+
+      var slotsNumber = $( '#freeSlots' ).html();
+      $( '#freeSlots' ).html( parseInt( slotsNumber ) + 1 );
     }
   }
 })();
