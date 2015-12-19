@@ -28,8 +28,15 @@ module Dwmb
             setTimers
         end
 
+        def on_ramp? card_id
+            current_slots.each do |user|
+                return true if user.card == card_id
+            end
+            return false
+        end
+
         def stateChanged new_state
-            puts @connecting
+            puts names
             current_slots.each_with_index do |user, index|
                 if (user and new_state[index] == 0)
                     if index == leaving

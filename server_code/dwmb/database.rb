@@ -17,9 +17,10 @@ module Dwmb
   class User
     include DataMapper::Resource
     property :id,         Serial
-    property :email,       String
+    property :email,      String
     property :username,   String
     property :password,   BCryptHash
+    property :code,       String
     has 1, :card
     has n, :sessions
   end

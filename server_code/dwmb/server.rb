@@ -58,10 +58,27 @@ module Dwmb
 
     #json: data = {card_id = xxxxxx}
     post '/poop' do
-        response = JSON.parse(params["data"])
+        card_id = JSON.parse(params["data"])[card_id]
+        user = User.first(card:card_id)
 
-        status.on_ramp?
+        if user
+            if status.on_ramp? card_id
+                setup.leaving = user
+                return {status: "ok", messgae: "bikedetach"}
+            else
+                setup.connecting = user
+                return {status: "ok", message: "bikeattach", code: code}
+            end
+        else
+            user = User.new
+            user.username = "Unknown"
+            user.card = card_id
+            user.code = sprintf '%05d', SecureRandom.random_number(99999)
+            user.save
+            return {status: "ok", message: "bikeattach", code: code}
+        end
     end
+    #message: ["bikedetach", "bikeattach"]
 
     #json: data = {state = 8*[_], key = "xxxxx"}
     post '/alive' do
@@ -70,9 +87,9 @@ module Dwmb
         key = response["key"]
         return {status:"error", message:"wrong key"}.to_json if key != Config::Key
         message = setup.stateChanged new_state
-        return {status:"ok", message:message.to_s}.to_json if message == :ok
-        return {status:"error", message: message.to_s}.to_json
+        return {status:"ok", message:message.to_s}.to_json
     end
+    #message: ["connected", "theft", "left", "cable", "ok"]
 
     post '/secret' do
       session_id = JSON.parse(params["data"])["session_id"]
