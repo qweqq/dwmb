@@ -10,7 +10,7 @@ module Dwmb
   class Card
     include DataMapper::Resource
     property :id,         Serial
-    property :cardid,     String
+    property :rfid,     String
 
     belongs_to :user
   end
