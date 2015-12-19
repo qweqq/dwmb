@@ -1,5 +1,7 @@
 body {
-  background-color: #ddd; }
+  background-image: url("../img/bg1.jpg");
+  background-size: contain;
+  background-size: cover; }
 
 .header {
   height: 100px;
@@ -28,7 +30,7 @@ body {
   margin-left: 10%;
   border-image: url("") 27 27 27 27 round round;
   border: 1px solid white;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 25px 35px;
   background-color: #016F54;
   font-weight: bold;

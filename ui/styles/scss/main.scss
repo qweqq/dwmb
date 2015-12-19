@@ -1,7 +1,7 @@
 $busy-light-color: yellow;
 $header-buttons-color: #016F54;
 $header-buttons-text-color: white;
-$skin-image: "../img/bg2.jpg";
+$skin-image: "../img/bg1.jpg";
 
 @mixin background-image($image) {
   background-image: url( $image );
@@ -10,8 +10,8 @@ $skin-image: "../img/bg2.jpg";
 }
 
 body {
-  //@include background-image( $skin-image );
-  background-color: #ddd;
+  @include background-image( $skin-image );
+  //background-color: #ddd;
 }
 
 .header {
@@ -48,7 +48,7 @@ body {
   border-image: url( '' ) 27 27 27 27 round round;
 
   border: 1px solid white;
-  border-radius: 4px;
+  border-radius: 10px;
 
   padding: 25px 35px;
 
