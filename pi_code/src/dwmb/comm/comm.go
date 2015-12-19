@@ -12,6 +12,13 @@ const (
 	Plugged   = 1
 )
 
+const (
+	Off    = 0
+	Red    = 1
+	Green  = 2
+	Yellow = 3
+)
+
 type State struct {
 	Slots   [8]int
 	Message string
@@ -19,6 +26,7 @@ type State struct {
 
 type DisplayMessage struct {
 	Message string
+	Lights  *[8]int
 }
 
 func Init(device string, baud int) (chan *State, chan *DisplayMessage, error) {
@@ -29,7 +37,10 @@ func Init(device string, baud int) (chan *State, chan *DisplayMessage, error) {
 	if err != nil {
 		return stateMessages, displayMessages, err
 	}
+
 	go receive(f, stateMessages)
+	go send(f, displayMessages)
+
 	return stateMessages, displayMessages, nil
 }
 
@@ -72,5 +83,16 @@ func receive(f *serial.Port, stateMessages chan<- *State) {
 			}
 		}
 		data = portions[len(portions)-1]
+	}
+}
+
+func send(f *serial.Port, displayMessages <-chan *DisplayMessage) {
+	for {
+		message := <-displayMessages
+		if message.Message != "" {
+			f.Write([]byte("d" + strings.Replace(message.Message, "\n", "\v", -1) + "\n"))
+		} else {
+			f.Write([]byte("o\n"))
+		}
 	}
 }

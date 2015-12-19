@@ -33,6 +33,17 @@ state_t states[8];
 uint8_t current_state;
 
 
+
+static inline void lcd_on() {
+    lcd_init();
+    setbit(LCD_BACKLIGHT_port, LCD_BACKLIGHT_pin);
+}
+
+static inline void lcd_off() {
+    lcd_clear();
+    clearbit(LCD_BACKLIGHT_port, LCD_BACKLIGHT_pin);
+}
+
 void state_changed() {
     uart_write_byte('s');
     for (uint8_t i = 0; i < 8; i++) {
@@ -73,20 +84,38 @@ void next_slot() {
     ADC_MULTIPLEXER_port &= (~ADC_MULTIPLEXER_mask) | (current_state << ADC_MULTIPLEXER_shift);
 }
 
-char c;
+void process_command(char* command) {
+    switch(command[0]) {
+        case 'd':
+            lcd_on();
+            uint8_t y = 0;
+            for (char* c = &(command[1]); *c != '\0'; c++) {
+                if (*c == '\v') {
+                    y++;
+                    lcd_gotoxy(0, y);
+                } else {
+                    lcd_putchar(*c);
+                }
+            }
+            return;
+        case 'o':
+            lcd_off();
+            return;
+    }
+}
 
 ISR(USART_RXC_vect) {
-    c = uart_read_byte();
-}
+    static char buf[50];
+    static uint8_t current = 0;
 
-static inline void lcd_on() {
-    lcd_init();
-    setbit(LCD_BACKLIGHT_port, LCD_BACKLIGHT_pin);
-}
-
-static inline void lcd_off() {
-    lcd_clear();
-    clearbit(LCD_BACKLIGHT_port, LCD_BACKLIGHT_pin);
+    buf[current] = uart_read_byte();
+    if (buf[current] == '\n' || buf[current] == '\r' || current >= sizeof(buf) - 1) {
+        buf[current] = '\0';
+        process_command(buf);
+        current = 0;
+    } else {
+        current++;
+    }
 }
 
 static inline void timer_init() {
@@ -104,11 +133,7 @@ static inline void init() {
     DDRC = DDRC_STATE;
     DDRD = DDRD_STATE;
 
-    DDRD = ~0x01;    // all outputs
-    DDRB = 0x07;
-    DDRC = ~0x01;
-
-    lcd_on();
+    lcd_init();
     adc_init();
     uart_init();
     uart_enable_interrupt();
@@ -125,10 +150,9 @@ int main()
     leds[4] = yellow;
     for (;;) {
         next_slot();
-        _delay_ms(500);
-        uart_write_string("a\n");
+        _delay_ms(50);
         adc_start();
-        _delay_ms(1500);
+        _delay_ms(50);
     }
     return 0;
 }
