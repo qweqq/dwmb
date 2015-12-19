@@ -28,6 +28,7 @@
 
 #define ADC_MULTIPLEXER_port PORTC
 #define ADC_MULTIPLEXER_shift 1
+#define ADC_MULTIPLEXER_mask (7 << ADC_MULTIPLEXER_shift)
 
 
 #define LED_COUNTER_RESET_port PORTD

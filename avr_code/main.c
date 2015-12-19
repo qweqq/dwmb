@@ -8,6 +8,7 @@
 #include "simple_uart.h"
 #include "text.h"
 #include "leds.h"
+#include "adc_values.h"
 
 static inline void adc_init()
 {
@@ -23,11 +24,53 @@ static inline void adc_start()
 {
     ADCSRA |= (1<<ADSC);
 }
+typedef enum {
+    unplugged,
+    plugged
+} state_t;
+
+state_t states[8];
+uint8_t current_state;
+
+
+void state_changed() {
+    uart_write_byte('s');
+    for (uint8_t i = 0; i < 8; i++) {
+        if (states[i] == plugged) {
+            uart_write_byte('p');
+            continue;
+        }
+        if (states[i] == unplugged) {
+            uart_write_byte('u');
+            continue;
+        }
+    }
+    uart_write_newline();
+}
 
 ISR(ADC_vect) {
-    char str[15];
-    itoan(ADC, str);
-    lcd_puts(str);
+    if (states[current_state] == plugged) {
+        if (ADC > ADC_PLUGGED_LOW && ADC < ADC_PLUGGED_HIGH) {
+            return;
+        }
+        states[current_state] = unplugged;
+        state_changed();
+        return;
+    }
+    if (states[current_state] == unplugged) {
+        if (ADC > ADC_PLUGGED_LOW && ADC < ADC_PLUGGED_HIGH) {
+            states[current_state] = plugged;
+            state_changed();
+            return;
+        }
+        return;
+    }
+}
+
+void next_slot() {
+    current_state = (current_state + 1) % 8;
+    ADC_MULTIPLEXER_port |= current_state << ADC_MULTIPLEXER_shift;
+    ADC_MULTIPLEXER_port &= (~ADC_MULTIPLEXER_mask) | (current_state << ADC_MULTIPLEXER_shift);
 }
 
 char c;
@@ -78,25 +121,12 @@ int main()
 {
     _delay_ms(2500);
     init();
-    uint8_t number = 0;
-    char str[5];
-    c = ' ';
     leds[3] = green;
     leds[4] = yellow;
     for (;;) {
-        uart_write_string("foo");
-        uart_write_newline();
-        lcd_clear();
-        lcd_puts("last char: ");
-        lcd_putchar(c);
-        lcd_gotoxy(0, 1);
-        lcd_puts("ADC ");
-        PORTC = number << 1;
-        number = (number + 1) % 8;
-        itoan(number, str);
-        lcd_puts(str);
-        lcd_puts(": ");
+        next_slot();
         _delay_ms(500);
+        uart_write_string("a\n");
         adc_start();
         _delay_ms(1500);
     }
