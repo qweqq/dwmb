@@ -1,5 +1,6 @@
 ( function () {
-  var menuUrl = "../main-header.html";
+  //var menuUrl = "../main-header.html";
+  var menuUrl = "../loged-user-header.html";
   var contentUrl = "../main-content.html";
   var jsUrl = "js/main.js";
 
