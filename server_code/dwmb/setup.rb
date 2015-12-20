@@ -36,15 +36,15 @@ module Dwmb
             }
         end
 
-        def serialise_slots
+        def serialise_slots(empty=0, taken=1, error=2)
             serialised_slots = []
             current_slots.each_with_index do |slot, index|
                 user = slot[0]
                 state = slot[1]
                 if user
-                    serialised_slots[index] = if state == :theft then 2 else 1 end
+                    serialised_slots[index] = if state == :theft then error else taken end
                 else
-                    serialised_slots[index] = 0
+                    serialised_slots[index] = empty
                 end
             end
             return serialised_slots

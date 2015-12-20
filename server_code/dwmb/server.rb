@@ -80,18 +80,8 @@ module Dwmb
     end
 
 	get '/status' do
-		slots = setup.serialise_slots
-		for index in 0 ... slots.size
-			if slots[index] == 0
-				slots[index] = 'off'
-			elsif slots[index] == 1
-				slots[index] = 'on'
-			elsif slots[index] == 2
-				slots[index] = 'error'
-			else
-				raise
-			end
-		end
+		slots = setup.serialise_slots(empty="off", taken="on", error="error")
+
 		{status: "ok", slots: slots}.to_json
 	end
 
@@ -118,7 +108,7 @@ module Dwmb
             user_on_ramp = setup.on_ramp(rfid)
             if user_on_ramp
                 if setup.current_slots[user_on_ramp][1] == :theft
-                    setup.current_slots[user_on_ramp][1] = :none
+                    setup.current_slots[user_on_ramp] = [nil, :none]
                     setup.reset_alarm
                     setup.mark_user_for_leaving(user)
                     return {status: "ok", message: "disconnected"}.to_json
