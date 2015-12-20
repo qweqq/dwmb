@@ -61,6 +61,27 @@
     });
   });
 
+  $( '#login_submit' ).on( 'click', function () {
+    var json = {
+      data: {
+        username: $( '#username' ).val(),
+        password: $( '#password' ).val()
+      }
+    }
+
+    $.ajax({
+      url: '/login',
+      data: json,
+      type: 'POST'
+    }).done( function ( data ) {
+      if ( jsonData['status'] == 'error' ) {
+        ev.preventDefault();
+      } else if ( jsonData['status'] == 'ok' ) {
+        HELPERS_MODULE.setCookie( 'sessionId', jsonData['session_id'], 1 );
+      }
+    })
+  } );
+
 })();
 
 (function () {

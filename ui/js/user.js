@@ -4,15 +4,15 @@
     var profileInfo = $( '#profileInfo' );
     var userInfoEdit = $( '#userInfoEdit' );
 
-    userInfoEdit.hide();
-    profileInfo.toggle();
+    userInfoEdit.hide( 'fast' );
+    profileInfo.toggle( 'fast' );
 
     $( '#editProfileButton' ).on( 'click', function () {
       profileInfo.hide();
 
-      userInfoEdit.show();
+      userInfoEdit.show( 'fast' );
       $( '#saveProfileChanges' ).on( 'click', function () {
-        userInfoEdit.hide();
+        userInfoEdit.hide( 'fast' );
       } )
     } );
   } );
@@ -22,8 +22,24 @@
 (function () {
   var sessionId = getCookie('sessionId');
 
+  var data = {
+    data: {
+      session_id: sessionId
+    }
+  }
+
   $.ajax({
     url: '/user_info',
-    data: '{session_id: "' + sessionId + '"}'
-  }).done();
+    data: data
+  }).done( function ( data ) {
+    var jsonData = $.parseJSON( json );
+
+    if ( jsonData['status']== 'not checked' ) {
+      $( '.bike-board' ).hide( 'fast' );
+    } else if ( jsonData['status'] == 'ok' ) {
+      $( '.bike-board' ).show( 'fast' );
+
+      $( '#slotNumber' ).html( jsonData['slot'] );
+    }
+  } );
 })();
