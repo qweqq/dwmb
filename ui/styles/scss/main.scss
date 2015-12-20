@@ -73,6 +73,12 @@ body {
   font-style: Arial, Helvetica, sans-serif;
 }
 
+.user-profile .profile-button {
+  width: 200px;
+
+  float: right;
+}
+
 .content-container {
   display: flex;
   flex-flow: row;
