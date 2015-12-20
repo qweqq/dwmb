@@ -2,6 +2,7 @@ require 'timers'
 require_relative 'config'
 require_relative 'database'
 require 'base64'
+require 'pony'
 
 module Dwmb
     class Setup
@@ -93,12 +94,23 @@ module Dwmb
             return nil
         end
 
-        def save_shanpshot(name, snapshot="")
+        def save_snapshot(name, snapshot="")
             content = snapshot
             decode_base64_content = Base64.decode64(content)
-            File.open(name, "wb") do |f|
+            File.open(File.join(Config::Snapshot_folder, name + ".jpg"), "wb") do |f|
               f.write(decode_base64_content)
             end
+        end
+
+        def send_mail (email, snapshot_name)
+            Pony.mail({
+    			:to => email,
+    			:subject => "DWMB: Alarm!",
+    			:body => "Your bike is stolen!",
+                :attachments => {"snapshot.jpg" => File.read(snapshot_name)},
+    			:via => :smtp,
+    			:via_options => Config::Mail_options
+    		})
         end
 
         def state_update(new_states, snapshot=nil)
@@ -115,8 +127,9 @@ module Dwmb
                     if @connecting
                         @current_slots[index] = [@connecting, :none]
                         time = Time.now.utc
-                        save_shanpshot(time, snapshot) if snapshot
-                        Event.create(user: @connecting, slot:index.to_s, type: :connected, time:time, snapshot: time)
+                        save_snapshot(time.to_i.to_s, snapshot) if snapshot
+                        filename = time.to_i.to_s + ".jpg"
+                        Event.create(user: @connecting, slot:index.to_s, type: :connected, time:time, snapshot: filename)
                         @connecting = nil
                         result = :connected
                     end
@@ -124,8 +137,10 @@ module Dwmb
                     if current_slot_state == :leaving
                         current_slots[index] = [nil, :none]
                         time = Time.now.utc
-                        save_shanpshot(time, snapshot) if snapshot
-                        Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:time, snapshot: time)
+                        save_snapshot(time.to_i.to_s, snapshot) if snapshot
+                        filename = time.to_i.to_s + ".jpg"
+                        Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:time, snapshot: filename)
+                        result = :disconnected
                     else
                         if current_slots[index][1] != :theft
                             current_slots[index] = [current_slot_user, :theft]
@@ -133,8 +148,10 @@ module Dwmb
                             alarm.slot = index
                             alarm.type = :theft
                             time = Time.now.utc
-                            save_shanpshot(time, snapshot) if snapshot
-                            Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: time)
+                            save_snapshot(time.to_i.to_s, snapshot) if snapshot
+                            filename = time.to_i.to_s + ".jpg"
+                            send_mail(current_slot_user.email, filename) if current_slot_user.email
+                            Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: filename)
                         end
                         result = :theft
                     end
