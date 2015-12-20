@@ -1,24 +1,29 @@
 package sound
 
 import (
-	"log"
 	"os/exec"
+	"sync"
 )
 
 type Sound struct {
 	SoundsFolder string
 	currentSound string
 	player       *exec.Cmd
+	mutex        *sync.Mutex
 }
 
 func NewSound(soundsFolder string) *Sound {
 	return &Sound{
 		SoundsFolder: soundsFolder,
 		currentSound: "",
+		mutex:        &sync.Mutex{},
 	}
 }
 
 func (s *Sound) Play(sound string, override bool) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
 	if s.currentSound == sound {
 		return
 	}
@@ -33,12 +38,17 @@ func (s *Sound) Play(sound string, override bool) {
 		}
 	}
 	soundFile := s.SoundsFolder + "/" + sound + ".ogg"
-	log.Printf("playing sound: %s\n", soundFile)
 	s.player = exec.Command("play", soundFile)
-	s.player.Start()
+	go func(s *Sound) {
+		s.player.Run()
+		s.player = nil
+		s.currentSound = ""
+	}(s)
 }
 
 func (s *Sound) Stop() {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 	if s.player != nil {
 		s.player.Process.Kill()
 		s.player = nil

@@ -85,7 +85,7 @@ func (s *Server) SendTag(tag *rfid.Tag) (*Response, error) {
 }
 
 func (s *Server) request(link string, data string) (*Response, error) {
-	log.Printf("sending request at %s with data: %s\n", link, data)
+	log.Printf("sending request at %s with data: %s\n", link, "")
 	resp, err := http.PostForm(fmt.Sprintf("%s/%s", s.BaseUrl, link),
 		url.Values{"data": {data}},
 	)
