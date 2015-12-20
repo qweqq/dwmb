@@ -1,28 +1,45 @@
 <div class="user-buttons">
-  <div id="login" class="user_button">ВХОД</div>
+  <div id="login" class="user_button">Вход</div>
   <form id="login_form" action="#" hidden="hidden">
-    Потребителско име * <input type="text" name="username"><br>
-    Парола * <input type="password" name="password"><br>
-    <input type="button" value="ПРОДЪЛЖИ">
+    <div class="form-group">
+      <label for="username">Потребителско име *</label>
+      <input type="text" class="form-control" id="username">
+    </div>
+    <div class="form-group">
+      <label for="password">Парола *</label>
+      <input type="password" class="form-control" id="password">
+    </div>
+    <input id="login_submit" class="btn btn-default" type="button" value="Продължи">
   </form>
-  <div id="register" class="user_button">РЕГИСТРАЦИЯ</div>
+  <div id="register" class="user_button">Регистрация</div>
 
-  <form id="registration_form" action="#" hidden="hidden">
+  <form id="registration_form" class="form-horizontal" action="#" hidden="hidden">
     <div>
-      <h3>Въвеждане на код</h3>
+      <h3><!-- Въвеждане на код --></h3>
       <section>
-          <form action="">
-            <p>Моля, въведи кода, който си получил от охранителното устройство след чекиране на ISIC карта:</p>
-            <input type="text" name="validation_code">
+          <form action="" class="form-horizontal">
+            <div class="form-group">
+              <label for="codeInputField">Код от устройството за заключване на колела</label>
+              <input type="text" class="form-control" id="codeInputField" required>
+            </div>
             <!-- <input type="submit" value="Продължи"> -->
           </form> 
       </section>
       <h3>Вече може да се регистрираш</h3>
       <section>
-          <form action="">
-            Потребителско име * <input type="text" name="username"><br>
-            Парола * <input type="password" name="password"><br>
-            <!-- <input type="submit" value="Продължи"> -->
+          <form action="" class="form-horizontal">
+            <div class="form-group">
+              <label for="usernameLoginInput">Потребителско име *</label>
+              <input type="text" class="form-control" id="usernameLoginInput" required>
+            </div>
+            <div class="form-group">
+              <label for="passwordLoginInput">Парола *</label>
+              <input type="password" class="form-control" id="passwordLoginInput" required>
+            </div>
+            <div class="form-group">
+              <label for="emailLoginInput">E-mail *</label>
+              <input type="email" class="form-control" id="emailLoginInput" required>
+            </div>
           </form> 
       </section>
     </div>

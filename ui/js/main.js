@@ -13,13 +13,22 @@
   $( '#register' ).on( 'click', function ( ev ) {
     registrationForm.toggle( function () {
       if ( $( this ).css( 'display' ) === 'none' ) {
-        $( this ).prop( 'hidden', 'hidden' );
+        $( this ).hide();
       } else {
-        if ( loginForm.prop( 'display' ) != 'none' ) {
-          loginForm.prop( 'hidden', 'hidden' );
+        if ( loginForm.css( 'display' ) !== 'none' ) {
+          loginForm.hide();
         }
 
-        $( this ).removeProp( 'hidden' );
+        $( this ).show();
+        $( '.steps.clearfix' ).hide();
+        $( '.title:not(.current)' ).hide();
+
+        function showCurrent() {
+          $( '.title.current' ).show();
+          $( '.title:not(.current)' ).hide();
+        }
+        $( "[href='#next']" ).on( 'click', showCurrent);
+        $( "[href='#previous']" ).on( 'click', showCurrent);
       }
     });
   });
@@ -27,13 +36,13 @@
   $( '#login' ).on( 'click', function ( ev ) {
     loginForm.toggle( function () {
       if ( $( this ).css( 'display' ) === 'none' ) {
-        $( this ).prop( 'hidden', 'hidden' );
+        $( this ).hide();
       } else {
-        if ( registrationForm.css( 'display' ) != 'none' ) {
-          registrationForm.prop( 'hidden', 'hidden' );
+        if ( registrationForm.css( 'display' ) !== 'none' ) {
+          registrationForm.hide();
         }
 
-        $( this ).removeProp( 'hidden' );
+        $( this ).show();
       }
     });
   });
@@ -42,17 +51,23 @@
 
 (function () {
 
-  $( '#board1 .light' ).on( 'click', function ( ev ) {
+  setInterval(function(){
+    $.ajax({
+      url: '/status'
+    }).done( function ( json ) {
+      var jsonData = $.parseJSON( json );
+      var slots = jsonData['slots'];
 
-    var slot = $( ev.target );
-    var slotId = slot.attr( 'data-id' );
-
-    if ( slot.hasClass( 'on' ) ) {
-      HELPERS_MODULE.switchOffSlot( slotId );
-    } else {
-      HELPERS_MODULE.switchOnSlot( slotId );
-    }
-
-  });
+      for ( var i = 0; i < slots.length; i++ ) {
+        if ( slots[i] === 'error' ) {
+          HELPERS_MODULE.switchToError( i );
+        } else if ( slots[i] === 'on' ) {
+          HELPERS_MODULE.switchOnSlot( i );
+        } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
+          HELPERS_MODULE.switchOffSlot( i );
+        }
+      }      
+    } )
+  }, 1000);
 
 })();

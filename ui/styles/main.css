@@ -1,5 +1,7 @@
 body {
-  background-color: #ddd; }
+  background-image: url("../img/bg3.jpg");
+  background-size: contain;
+  background-size: cover; }
 
 .header {
   height: 100px;
@@ -20,35 +22,57 @@ body {
 .menu > .user-buttons {
   display: inline-block;
   float: left;
+  padding: 0 25%;
   position: relative;
-  width: 65%; }
+  width: 100%; }
 
 .user-buttons > .user_button {
   display: inline-block;
   margin-left: 10%;
-  border-image: url("") 27 27 27 27 round round;
-  border: 1px solid white;
-  border-radius: 4px;
-  padding: 25px 35px;
-  background-color: #016F54;
-  font-weight: bold;
-  color: white; }
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  /* For IE8 and earlier */
+  padding: 10px 20px;
+  background-color: #035E9F;
+  font-size: 20pt;
+  color: white;
+  cursor: pointer; }
+
+.user_button > * {
+  font-style: Arial, Helvetica, sans-serif; }
 
 .content-container {
   display: flex;
   flex-flow: row;
   position: absolute;
-  top: 50%;
+  top: 58%;
   margin-left: -8px;
   width: 100%; }
 
 .content-container > .board {
-  background-color: black;
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
+  box-shadow: 5px 5px 10px #444;
   width: 80%;
   height: 145px;
   border: 1px solid black;
   border-radius: 10px;
   margin: 0 auto; }
+
+.board > .pipe {
+  background-image: url("../img/pipe.png");
+  background-size: contain;
+  background-size: cover;
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  left: 8px;
+  top: 39%;
+  z-index: -200; }
 
 .board > .lights {
   display: flex;
@@ -76,13 +100,24 @@ body {
   box-shadow: 0px 0px 10px yellow;
   background-color: yellow;
   border: 1px solid yellow;
+  inset: 0 0 20px 0px 0, 0, 0, 1;
+  -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+  transition: box-shadow 0.5s, background-color 0.5s, border 0.5s; }
+
+.lights > li.light.error {
+  box-shadow: 0px 0px 10px red;
+  background-color: red;
+  border: 1px solid red;
+  background-image: url("../img/warning.png");
+  background-size: contain;
+  background-size: cover;
+  inset: 0 0 20px 0px 0, 0, 0, 1;
   -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
   transition: box-shadow 0.5s, background-color 0.5s, border 0.5s; }
 
 .board > .counter {
   background-color: #333;
   color: white;
-  font-weight: bold;
   text-align: center;
   width: 20%;
   height: 25px;
@@ -91,16 +126,17 @@ body {
 .menu > .subscribtion-buttons {
   display: inline-block;
   float: right;
-  position: relative;
-  width: 50px;
-  width: 34%; }
+  position: absolute;
+  right: 2%;
+  width: 15%; }
 
 .subscribtion-buttons > .subscribtion-button {
   display: inline-block;
   margin-left: 10%;
   float: right;
   height: 40px;
-  width: 40px; }
+  width: 40px;
+  cursor: pointer; }
 
 .subscribtion-button.twitter {
   background-image: url("../img/twitter.png");
@@ -113,7 +149,47 @@ body {
   background-size: cover; }
 
 #login_form {
-  position: absolute; }
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
+  color: white;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  /* For IE8 and earlier */
+  height: 230px;
+  width: 400px;
+  padding: 20px;
+  position: absolute;
+  margin-left: -24%;
+  z-index: 1000; }
+
+#login_submit {
+  float: right; }
+
+#registration_form {
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
+  color: white;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  /* For IE8 and earlier */
+  width: 450px;
+  padding: 20px 40px;
+  margin-left: 20.3%;
+  position: absolute;
+  z-index: 1000; }
+
+#registration_form ul {
+  list-style-type: none;
+  display: flex;
+  flex-flow: row nowrap; }
+
+#registration_form ul li {
+  margin: 0 auto; }
+
+#registration_form li > a {
+  color: #f1f1f1; }
 
 .footer {
   bottom: 0;

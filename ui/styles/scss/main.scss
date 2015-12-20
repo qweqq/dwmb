@@ -1,7 +1,13 @@
 $busy-light-color: yellow;
-$header-buttons-color: #016F54;
+$error-light-color: red;
+$header-buttons-color: #035E9F;
+//#016F54;
 $header-buttons-text-color: white;
-$skin-image: "../img/bg2.jpg";
+
+$skin-image: "../img/bg3.jpg";
+$tr-light-image: "../img/texture.jpg";
+$warning-sign: "../img/warning.png";
+$pipe: "../img/pipe.png";
 
 @mixin background-image($image) {
   background-image: url( $image );
@@ -10,8 +16,8 @@ $skin-image: "../img/bg2.jpg";
 }
 
 body {
-  //@include background-image( $skin-image );
-  background-color: #ddd;
+  @include background-image( $skin-image );
+  //background-color: #ddd;
 }
 
 .header {
@@ -38,24 +44,36 @@ body {
 .menu > .user-buttons {
   display: inline-block;
   float: left;
+  padding: 0 25%;
   position: relative;
-  width: 65%;
+  width: 100%;
 }
 .user-buttons > .user_button {
   display: inline-block;
   margin-left: 10%;
 
-  border-image: url( '' ) 27 27 27 27 round round;
+  //border: 2px solid $header-buttons-color;
+  //border-radius: 10px;
+  //box-shadow: inset 0px 0px 4px white;
 
-  border: 1px solid white;
-  border-radius: 4px;
+  @include background-image( $tr-light-image );
+  //border-radius: 10px;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
 
-  padding: 25px 35px;
+  padding: 10px 20px;
 
   background-color: $header-buttons-color;
 
-  font-weight: bold;
+  //font-weight: bold;
+  font-size: 20pt;
   color: $header-buttons-text-color;
+
+  cursor: pointer;
+}
+
+.user_button > * {
+  font-style: Arial, Helvetica, sans-serif;
 }
 
 .content-container {
@@ -63,7 +81,7 @@ body {
   flex-flow: row;
 
   position: absolute;
-  top: 50%;
+  top: 58%;
   
   margin-left: -8px;
 
@@ -71,7 +89,9 @@ body {
 }
 
 .content-container > .board {
-  background-color: black;
+  //background-color: black;
+  @include background-image( $tr-light-image );
+  box-shadow: 5px 5px 10px #444;
 
   width: 80%;
   height: 145px;
@@ -80,6 +100,20 @@ body {
   border-radius: 10px;
 
   margin: 0 auto;
+}
+
+.board > .pipe {
+  @include background-image( $pipe );
+
+  height: 30px;
+  width: 100%;
+
+  position: absolute;
+
+  left: 8px;
+  top: 39%;
+
+  z-index: -200;
 }
 
 .board > .lights {
@@ -116,6 +150,20 @@ body {
   background-color: $busy-light-color;
   border: 1px solid $busy-light-color;
 
+  inset: 0 0 20px 0px (0, 0, 0, 1);
+
+  -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+  transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+}
+
+.lights > li.light.error {
+  box-shadow: 0px 0px 10px $error-light-color;
+  background-color: $error-light-color;
+  border: 1px solid $error-light-color;
+  @include background-image( $warning-sign );
+
+  inset: 0 0 20px 0px (0, 0, 0, 1);
+
   -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
   transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
 }
@@ -124,7 +172,7 @@ body {
   background-color: #333;
   color: white;
 
-  font-weight: bold;
+  //font-weight: bold;
   text-align: center;
 
   width: 20%;
@@ -138,10 +186,10 @@ body {
 
   float: right;
 
-  position: relative;
-  width: 50px;
+  position: absolute;
 
-  width: 34%;
+  right: 2%;
+  width: 15%;
 }
 .subscribtion-buttons > .subscribtion-button {
   display: inline-block;
@@ -154,7 +202,10 @@ body {
 
   height: 40px;
   width: 40px;
+
+  cursor: pointer;
 }
+
 .subscribtion-button.twitter {
   @include background-image ( '../img/twitter.png' )
 }
@@ -163,7 +214,57 @@ body {
 }
 
 #login_form {
+  //background-color: #ddd;
+  @include background-image( $tr-light-image );
+  color: white;
+
+  //border-radius: 10px;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
+
+  height: 230px;
+  width: 400px;
+
+  padding: 20px;
   position: absolute;
+
+  margin-left: -24%;
+
+  z-index: 1000;
+}
+#login_submit {
+  float: right;
+}
+
+#registration_form {
+  //background-color: #ddd;
+  @include background-image( $tr-light-image );
+  color: white;
+
+  //border-radius: 10px;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
+
+  width: 450px;
+
+  padding: 20px 40px;
+  margin-left: 20.3%;
+  
+  position: absolute;
+
+  z-index: 1000;
+}
+#registration_form ul {
+  list-style-type: none;
+  display: flex;
+  flex-flow: row nowrap;
+}
+#registration_form ul li {
+  margin: 0 auto;
+}
+
+#registration_form li > a {
+  color: #f1f1f1;
 }
 
 .footer {
