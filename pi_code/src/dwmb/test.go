@@ -25,6 +25,19 @@ func processResponse(messages chan<- *comm.DisplayMessage, messageTimer *time.Ti
 		message.Message = text
 	}
 
+	for i, slot := range resp.Slots {
+		log.Printf("i: %d", i)
+		switch slot {
+		case request.Free:
+			message.Lights[i] = comm.Green
+		case request.Occupied:
+			message.Lights[i] = comm.Yellow
+		case request.Alarm:
+			message.Lights[i] = comm.Red
+		default:
+			message.Lights[i] = comm.Off
+		}
+	}
 	messages <- message
 	return
 }
