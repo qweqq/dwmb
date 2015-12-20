@@ -13,13 +13,22 @@
   $( '#register' ).on( 'click', function ( ev ) {
     registrationForm.toggle( function () {
       if ( $( this ).css( 'display' ) === 'none' ) {
-        $( this ).prop( 'hidden', 'hidden' );
+        $( this ).hide();
       } else {
-        if ( loginForm.prop( 'display' ) != 'none' ) {
-          loginForm.prop( 'hidden', 'hidden' );
+        if ( loginForm.css( 'display' ) !== 'none' ) {
+          loginForm.hide();
         }
 
-        $( this ).removeProp( 'hidden' );
+        $( this ).show();
+        $( '.steps.clearfix' ).hide();
+        $( '.title:not(.current)' ).hide();
+
+        function showCurrent() {
+          $( '.title.current' ).show();
+          $( '.title:not(.current)' ).hide();
+        }
+        $( "[href='#next']" ).on( 'click', showCurrent);
+        $( "[href='#previous']" ).on( 'click', showCurrent);
       }
     });
   });
@@ -27,13 +36,13 @@
   $( '#login' ).on( 'click', function ( ev ) {
     loginForm.toggle( function () {
       if ( $( this ).css( 'display' ) === 'none' ) {
-        $( this ).prop( 'hidden', 'hidden' );
+        $( this ).hide();
       } else {
-        if ( registrationForm.css( 'display' ) != 'none' ) {
-          registrationForm.prop( 'hidden', 'hidden' );
+        if ( registrationForm.css( 'display' ) !== 'none' ) {
+          registrationForm.hide();
         }
 
-        $( this ).removeProp( 'hidden' );
+        $( this ).show();
       }
     });
   });
@@ -59,7 +68,7 @@
     } )
   }, 1000);*/
 
-  var lights = [ 'on', 'off', 'error', 'on', 'on', 'off', 'on', 'off' ];
+  var lights = [ 'on', 'off', 'off', 'on', 'on', 'off', 'on', 'off' ];
 
   for ( var i = 0; i < lights.length; i++ ) {
     if ( lights[i] === 'error' ) {

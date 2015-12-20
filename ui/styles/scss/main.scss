@@ -7,6 +7,7 @@ $header-buttons-text-color: white;
 $skin-image: "../img/bg3.jpg";
 $tr-light-image: "../img/texture.jpg";
 $warning-sign: "../img/warning.png";
+$pipe: "../img/pipe.png";
 
 @mixin background-image($image) {
   background-image: url( $image );
@@ -50,9 +51,14 @@ body {
   display: inline-block;
   margin-left: 10%;
 
-  border: 2px solid $header-buttons-color;
+  //border: 2px solid $header-buttons-color;
+  //border-radius: 10px;
+  //box-shadow: inset 0px 0px 4px white;
+
+  @include background-image( $tr-light-image );
   border-radius: 10px;
-  box-shadow: inset 0px 0px 4px white;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
 
   padding: 10px 20px;
 
@@ -93,6 +99,20 @@ body {
   border-radius: 10px;
 
   margin: 0 auto;
+}
+
+.board > .pipe {
+  @include background-image( $pipe );
+
+  height: 30px;
+  width: 100%;
+
+  position: absolute;
+
+  left: 8px;
+  top: 39%;
+
+  z-index: -200;
 }
 
 .board > .lights {
@@ -139,7 +159,7 @@ body {
   box-shadow: 0px 0px 10px $error-light-color;
   background-color: $error-light-color;
   border: 1px solid $error-light-color;
-  @include background-image( $warning-sign );
+  //@include background-image( $warning-sign );
 
   inset: 0 0 20px 0px (0, 0, 0, 1);
 
