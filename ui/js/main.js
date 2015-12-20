@@ -1,6 +1,20 @@
 (function () {
 
-  $("#registration_form div").steps({
+  var form = $("#registration_form");
+
+/*
+  form.validate({
+    errorPlacement: function errorPlacement(error, element) {
+      element.before(error);
+    },
+    rules: {
+      confirm: {
+          equalTo: ""
+      }
+    }
+  });*/
+
+  form.children("div").steps({
     headerTag: "h3",
     bodyTag: "section",
     transitionEffect: "slideLeft",
@@ -73,3 +87,4 @@
   }, 1000);
 
 })();
+

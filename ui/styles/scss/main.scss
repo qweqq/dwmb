@@ -48,16 +48,9 @@ body {
   position: relative;
   width: 100%;
 }
-.user-buttons > .user_button {
-  display: inline-block;
-  margin-left: 10%;
-
-  //border: 2px solid $header-buttons-color;
-  //border-radius: 10px;
-  //box-shadow: inset 0px 0px 4px white;
-
+.user_button {
   @include background-image( $tr-light-image );
-  //border-radius: 10px;
+
   opacity: 0.7;
   filter: alpha(opacity=70); /* For IE8 and earlier */
 
@@ -70,6 +63,10 @@ body {
   color: $header-buttons-text-color;
 
   cursor: pointer;
+}
+.user-buttons > .user_button {
+  display: inline-block;
+  margin-left: 10%;
 }
 
 .user_button > * {
