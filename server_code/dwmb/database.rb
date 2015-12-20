@@ -45,10 +45,17 @@ module Dwmb
       belongs_to :user
   end
 
+  class Telegram
+      include DataMapper::Resource
+      property :id, Serial
+      property :chatid, String
+  end
+
   DataMapper.finalize
 
   Card.auto_upgrade!
   User.auto_upgrade!
   Session.auto_upgrade!
   Event.auto_upgrade!
+  Telegram.auto_upgrade!
 end

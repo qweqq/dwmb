@@ -22,6 +22,7 @@ const (
 type State struct {
 	Slots   [8]int
 	Message string
+	Snapshot string
 }
 
 type DisplayMessage struct {
