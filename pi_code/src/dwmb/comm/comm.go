@@ -90,9 +90,11 @@ func send(f *serial.Port, displayMessages <-chan *DisplayMessage) {
 	for {
 		message := <-displayMessages
 		if message.Message != "" {
-			f.Write([]byte("d" + strings.Replace(message.Message, "\n", "\v", -1) + "\n"))
-		} else {
-			f.Write([]byte("o\n"))
+			if message.Message == "\a" {
+				f.Write([]byte("o\n"))
+			} else {
+				f.Write([]byte("d" + strings.Replace(message.Message, "\n", "\v", -1) + "\n"))
+			}
 		}
 		if message.Lights != nil {
 			f.Write([]byte("l"))
