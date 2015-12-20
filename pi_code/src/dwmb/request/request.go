@@ -1,6 +1,7 @@
 package request
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -24,8 +25,9 @@ type Server struct {
 }
 
 type stateMessage struct {
-	Slots [8]int `json:"slots"`
-	Key   string `json:"key"`
+	Slots    [8]int `json:"slots"`
+	Key      string `json:"key"`
+	Snapshot string `json:"snapshot"`
 }
 
 type tagMessage struct {
@@ -44,18 +46,27 @@ func NewServer(baseUrl string, Key string) *Server {
 	return &Server{BaseUrl: baseUrl, Key: Key}
 }
 
-/*
-func encodeImage(filename string) string {
-
+func encodeImage(filename string) (string, error) {
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(data), nil
 }
-*/
 
 func (s *Server) SendState(state *comm.State) (*Response, error) {
-	data, err := json.Marshal(&stateMessage{
+	values := &stateMessage{
 		Slots: state.Slots,
 		Key:   s.Key,
-		// Snapshot: encodeImage(s.Snapshot),
-	})
+	}
+	if state.Snapshot != "" {
+		snapshot, err := encodeImage(state.Snapshot)
+		if err != nil {
+			return nil, err
+		}
+		values.Snapshot = snapshot
+	}
+	data, err := json.Marshal(values)
 	if err != nil {
 		return nil, err
 	}

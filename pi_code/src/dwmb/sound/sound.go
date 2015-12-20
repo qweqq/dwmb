@@ -1,6 +1,9 @@
 package sound
 
-import "os/exec"
+import (
+	"log"
+	"os/exec"
+)
 
 type Sound struct {
 	SoundsFolder string
@@ -15,13 +18,24 @@ func NewSound(soundsFolder string) *Sound {
 	}
 }
 
-func (s *Sound) Play(sound string) {
+func (s *Sound) Play(sound string, override bool) {
 	if s.currentSound == sound {
 		return
 	}
 	if s.player != nil {
-		s.player.Process.Kill()
+		if override {
+			s.Stop()
+		} else {
+			return
+		}
 	}
-	s.player = exec.Command("play", s.SoundsFolder+"/"+sound+".ogg")
+	soundFile := s.SoundsFolder + "/" + sound + ".ogg"
+	log.Printf("playing sound: %s\n", soundFile)
+	s.player = exec.Command("play", soundFile)
 	s.player.Start()
+}
+
+func (s *Sound) Stop() {
+	s.player.Process.Kill()
+	s.player = nil
 }
