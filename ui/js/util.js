@@ -7,7 +7,7 @@ var HELPERS_MODULE = {
     }
     document.getElementById( "alarm" ).pause();
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );  
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );  
   },
   switchOnSlot: function ( indexOfSlot ) {
     var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
@@ -16,7 +16,7 @@ var HELPERS_MODULE = {
       slot.addClass( 'on' );
     }
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
   },
   switchOffSlot: function ( indexOfSlot ) {
     var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
@@ -27,7 +27,7 @@ var HELPERS_MODULE = {
       slot.removeClass( 'on' );
     }
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
   },
   switchToError: function ( indexOfSlot ) {
     this.switchOnSlot();
@@ -35,7 +35,7 @@ var HELPERS_MODULE = {
     $( "#board1 [data-id='" + indexOfSlot + "']" ).addClass( 'error' );
     document.getElementById( "alarm" ).play();
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
   },
   setCookie: function ( cname, cvalue, exdays ) {
     var d = new Date();
