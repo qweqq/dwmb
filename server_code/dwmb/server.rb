@@ -46,7 +46,7 @@ module Dwmb
         p Card.all
         return "ok"
     end
-
+#------------------------------FRONTEND----------------------------
     #data = {username: hsdfsd, email: dskj, password: dffdf, card: 1234}
     post '/register' do
       input = JSON.parse(params["data"])
@@ -62,7 +62,7 @@ module Dwmb
       user.email = input["email"]
       user.code = ""
       user.save!
-
+      Event.create(user: user, slot:"", type: :registered, time:Time.now.utc)
       {status:"ok", message:"registered"}.to_json
     end
 
@@ -74,6 +74,7 @@ module Dwmb
         return {status:"error", message:"Wrong password"}.to_json
       end
 
+      Event.create(user: user, slot:"", type: :logged, time:Time.now.utc)
       session_id = SecureRandom.base64(32)
       Session.create(session_id:session_id, user:user)
       {status:"ok", session_id:session_id}.to_json
@@ -81,7 +82,6 @@ module Dwmb
 
 	get '/status' do
 		slots = setup.serialise_slots(empty="off", taken="on", error="error")
-
 		{status: "ok", slots: slots}.to_json
 	end
 
@@ -100,7 +100,6 @@ module Dwmb
     #json: data = {rfid = xxxxxx}
     post '/poop' do
         rfid = JSON.parse(params["data"])["rfid"]
-
         card = Card.first(rfid:rfid)
         user = if card then card.user else nil end
 
@@ -111,6 +110,7 @@ module Dwmb
                     setup.current_slots[user_on_ramp] = [nil, :none]
                     setup.reset_alarm
                     setup.mark_user_for_leaving(user)
+                    Event.create(user: user, slot: user_on_ramp.to_s, type: :restored, time:Time.now.utc)
                     return {status: "ok", message: "disconnected"}.to_json
                 else
                     setup.mark_user_for_leaving(user)
@@ -156,10 +156,8 @@ module Dwmb
             response[:message] = message.to_s
         end
 
-
         response[:slots] = setup.serialise_slots
-
-        #puts response.to_json
+        p Event.all()
         return response.to_json
     end
     #message: ["connected", "theft", "disconnected", "cable", "ok"]

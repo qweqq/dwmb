@@ -22,7 +22,7 @@ module Dwmb
             @connecting = nil
             @timers = Timers::Group.new
             @thread = Thread.new do
-                loo# p { @timers.wait }
+                loop { @timers.wait }
             end
             setTimers
         end
@@ -91,7 +91,9 @@ module Dwmb
                     if @connecting
                         # p "|we have a user to connect"
                         @current_slots[index] = [@connecting, :none]
+                        Event.create(user: @connecting, slot:index.to_s, type: :connected, time:Time.now.utc)
                         @connecting = nil
+                        p ("gs")
                         result = :connected
                     else
                         # p "|someone is messing with cables"
@@ -103,12 +105,16 @@ module Dwmb
                         # p "|the user has pooped and wants to get his bike!"
                         current_slots[index] = [nil, :none]
                         result = :disconnected
+                        Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:Time.now.utc)
                     else
                         # p "|the user has NOT pooped, and someone is stealing his bike"
-                        current_slots[index] = [current_slot_user, :theft]
-                        alarm.alarm = true
-                        alarm.slot = index
-                        alarm.type = :theft
+                        if current_slots[index][1] != :theft
+                            current_slots[index] = [current_slot_user, :theft]
+                            alarm.alarm = true
+                            alarm.slot = index
+                            alarm.type = :theft
+                            Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:Time.now.utc)
+                        end
                         result = :theft
                     end
                 end
