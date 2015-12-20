@@ -56,7 +56,8 @@ body {
 
   padding: 10px 20px;
 
-  background-color: $header-buttons-color;
+  //background-color: $header-buttons-color;
+  border-radius: 5px;
 
   //font-weight: bold;
   font-size: 20pt;
@@ -125,7 +126,8 @@ body {
   
   border: 1px solid black; 
   border-radius: 10px;
-
+  
+  align: center;
   margin: 0 auto;
 }
 
@@ -196,16 +198,22 @@ body {
 }
 
 .board > .counter {
-  background-color: #333;
+  @include background-image($tr-light-image);
+  //background-color: #333;
   color: white;
+  font-size: 20px;
 
-  //font-weight: bold;
+  font-weight: bold;
   text-align: center;
 
   width: 20%;
-  height: 25px;
+  height: 35px;
+  border-radius: 5px;
 
   margin: 0 auto;
+  position: relative;
+  align: center;
+  top: 10px;
 }
 
 .menu > .subscribtion-buttons {
@@ -296,14 +304,15 @@ body {
 
 .bike-board {
   position: absolute;
+  text-align: center;
 
-  width: 400px;
+  width: 30%;
   height: 50px;
 
   border-radius: 10px;
 
-  left: 465px;
-  top: 250px;
+  left: 35%;
+  top: 30%;
 }
 
 .bike-board > .info {
