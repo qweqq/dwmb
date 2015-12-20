@@ -41,6 +41,7 @@ module Dwmb
       property :time, DateTime
       property :type, Enum[ :registered, :connected, :disconnected, :alarm, :logged, :restored]
       property :slot, String
+      property :snapshot, String
       belongs_to :user
   end
 
