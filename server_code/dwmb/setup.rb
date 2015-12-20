@@ -5,7 +5,7 @@ require 'base64'
 
 module Dwmb
     class Setup
-        attr_accessor :current_slots, :alarm, :leaving, :connecting
+        attr_accessor :current_slots, :alarm, :leaving, :connecting, :timer
 
         class Alarm
             attr_accessor :alarm, :type, :slot
