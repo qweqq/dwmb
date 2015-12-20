@@ -1,7 +1,7 @@
 require 'timers'
 require_relative 'config'
 require_relative 'database'
-
+require 'base64'
 
 module Dwmb
     class Setup
@@ -93,7 +93,15 @@ module Dwmb
             return nil
         end
 
-        def state_update new_states
+        def save_shanpshot(name, snapshot="")
+            content = snapshot
+            decode_base64_content = Base64.decode64(content)
+            File.open(name, "wb") do |f|
+              f.write(decode_base64_content)
+            end
+        end
+
+        def state_update(new_states, snapshot)
             @timer.reset
             reset_alarm if alarm.alarm
             result = :ok
@@ -106,24 +114,30 @@ module Dwmb
                 if (not current_slot_user and new_state == 1)
                     if @connecting
                         @current_slots[index] = [@connecting, :none]
-                        Event.create(user: @connecting, slot:index.to_s, type: :connected, time:Time.now.utc)
+                        time = Time.now.utc
+                        content = File.read(time.to_s)
+                        save_shanpshot(time, snapshot)
+                        Event.create(user: @connecting, slot:index.to_s, type: :connected, time:time, snapshot: time)
                         @connecting = nil
                         result = :connected
-                    else
-                        result = :cable
                     end
                 elsif (current_slot_user and new_state == 0)
                     if current_slot_state == :leaving
                         current_slots[index] = [nil, :none]
-                        result = :disconnected
-                        Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:Time.now.utc)
+                        time = Time.now.utc
+                        content = File.read(time.to_s)
+                        save_shanpshot(time, snapshot)
+                        Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:time, snapshot: time)
                     else
                         if current_slots[index][1] != :theft
                             current_slots[index] = [current_slot_user, :theft]
                             alarm.alarm = true
                             alarm.slot = index
                             alarm.type = :theft
-                            Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:Time.now.utc)
+                            time = Time.now.utc
+                            content = File.read(time.to_s)
+                            save_shanpshot(time, snapshot)
+                            Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: time)
                         end
                         result = :theft
                     end

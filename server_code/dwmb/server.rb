@@ -9,7 +9,7 @@ module Dwmb
   class Server < Sinatra::Base
     set :bind, '0.0.0.0'
     set :server, 'thin'
-    set :public_folder, '../static'
+    set :public_folder, Config::Static
 
     def setup
         @@setup ||= Setup.new
@@ -93,6 +93,7 @@ module Dwmb
     #return- {status:...., session_id:.....}
 
 	get '/status' do
+        @timer.reset
 		slots = setup.serialise_slots(empty="off", taken="on", error="error")
 		{status: "ok", slots: slots}.to_json
 	end
@@ -121,6 +122,7 @@ module Dwmb
         search_result = setup.search_database search_input
         return {status:"ok", result:search_result }.to_json
     end
+    #return={status:...result:[{"slot":..., "username":..., "type":...,"time":...}.....{}]}
 
     post '/secret' do
       session_id = JSON.parse(params["data"])["session_id"]
@@ -131,7 +133,6 @@ module Dwmb
         return {status:"error", message:"Log in, you fuck"}.to_json
       end
     end
-
     #***********************DEVICE**********************************************
 
     #data = {rfid:....}
@@ -172,11 +173,12 @@ module Dwmb
     end
     #return = {status:..., message:..., [code:....]}
 
-    #data = {state:...., key:...}
+    #data = {state:...., key:..., snapshot:....}
     post '/alive' do
         data = JSON.parse(params["data"])
         new_states = data["slots"]
         key = data["key"]
+        picture = data["snapshot"] if data["snapshot"]
 
         response = {
             status: "ok",
@@ -188,7 +190,7 @@ module Dwmb
             response[:status] = "error"
             response[:message] = "wrong key"
         else
-            message = setup.state_update(new_states)
+            message = setup.state_update(new_states, picture)
             response[:status] = if message == :theft then 'error' else 'ok' end
             response[:message] = message.to_s
         end
