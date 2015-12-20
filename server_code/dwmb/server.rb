@@ -15,10 +15,6 @@ module Dwmb
         @@setup ||= Setup.new
     end
 
-    get "/status_all" do
-      {status:"ok", slots:["on", "off", "on", "error"]}.to_json
-    end
-
     get "/" do
       redirect '/index.html'
     end
@@ -81,6 +77,21 @@ module Dwmb
       Session.create(session_id:session_id, user:user)
       {status:"ok", session_id:session_id}.to_json
     end
+
+	post '/status' do
+		slots = setup.serialise_slots
+		for index in 0 ... slots.size
+			if slots[index] == 0:
+				slots[index] = 'on'
+			elsif slots[index] == 1:
+				slots[index] = 'off'
+			elsif slots[index] == 2
+				slots[index] = 'error'
+			else
+				raise
+		end
+		{status: "ok", slots: slots}.to_json
+	end
 
     post '/secret' do
       session_id = JSON.parse(params["data"])["session_id"]
