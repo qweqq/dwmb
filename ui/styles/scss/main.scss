@@ -44,8 +44,9 @@ body {
 .menu > .user-buttons {
   display: inline-block;
   float: left;
+  padding: 0 25%;
   position: relative;
-  width: 65%;
+  width: 100%;
 }
 .user-buttons > .user_button {
   display: inline-block;
@@ -56,7 +57,7 @@ body {
   //box-shadow: inset 0px 0px 4px white;
 
   @include background-image( $tr-light-image );
-  border-radius: 10px;
+  //border-radius: 10px;
   opacity: 0.7;
   filter: alpha(opacity=70); /* For IE8 and earlier */
 
@@ -80,7 +81,7 @@ body {
   flex-flow: row;
 
   position: absolute;
-  top: 50%;
+  top: 58%;
   
   margin-left: -8px;
 
@@ -159,7 +160,7 @@ body {
   box-shadow: 0px 0px 10px $error-light-color;
   background-color: $error-light-color;
   border: 1px solid $error-light-color;
-  //@include background-image( $warning-sign );
+  @include background-image( $warning-sign );
 
   inset: 0 0 20px 0px (0, 0, 0, 1);
 
@@ -185,10 +186,10 @@ body {
 
   float: right;
 
-  position: relative;
-  width: 50px;
+  position: absolute;
 
-  width: 34%;
+  right: 2%;
+  width: 15%;
 }
 .subscribtion-buttons > .subscribtion-button {
   display: inline-block;
@@ -213,13 +214,21 @@ body {
 }
 
 #login_form {
-  background-color: #ddd;
+  //background-color: #ddd;
+  @include background-image( $tr-light-image );
+  color: white;
+
+  //border-radius: 10px;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
 
   height: 230px;
   width: 400px;
 
   padding: 20px;
   position: absolute;
+
+  margin-left: -24%;
 
   z-index: 1000;
 }
@@ -228,11 +237,18 @@ body {
 }
 
 #registration_form {
-  background-color: #ddd;
+  //background-color: #ddd;
+  @include background-image( $tr-light-image );
+  color: white;
+
+  //border-radius: 10px;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
 
   width: 450px;
 
   padding: 20px 40px;
+  margin-left: 20.3%;
   
   position: absolute;
 
@@ -240,6 +256,11 @@ body {
 }
 #registration_form ul {
   list-style-type: none;
+  display: flex;
+  flex-flow: row nowrap;
+}
+#registration_form ul li {
+  margin: 0 auto;
 }
 
 .footer {
