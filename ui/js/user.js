@@ -24,6 +24,6 @@
 
   $.ajax({
     url: '/user_info',
-    data: '{sessionId: "' + sessionId + '"}'
+    data: '{session_id: "' + sessionId + '"}'
   }).done();
 })();

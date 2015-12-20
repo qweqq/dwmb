@@ -219,14 +219,14 @@ body {
 
 .bike-board {
   position: absolute;
-  width: 500px;
-  height: 90px;
+  width: 400px;
+  height: 50px;
   border-radius: 10px;
-  left: 415px;
-  top: 210px; }
+  left: 465px;
+  top: 200px; }
 
 .bike-board > .info {
-  font-size: 13pt;
+  font-size: 15pt;
   font-align: center; }
 
 .bike-board #slotNumber,
