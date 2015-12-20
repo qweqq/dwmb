@@ -16,11 +16,16 @@ func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
 
 func processResponse(messages chan<- *comm.DisplayMessage, messageTimer *time.Timer, resp *request.Response) {
 	log.Printf("got response: %v\n", resp)
+
+	message := &comm.DisplayMessage{}
+
 	if resp.Message != "" && resp.Message != "ok" {
 		text, timeout := display.MakeMessage(resp)
 		messageTimer.Reset(timeout * time.Second)
-		messages <- &comm.DisplayMessage{Message: text}
+		message.Message = text
 	}
+
+	messages <- message
 	return
 }
 
@@ -46,7 +51,7 @@ func main() {
 	go func() {
 		for {
 			<-messageTimer.C
-			messages <- &comm.DisplayMessage{Message: ""}
+			messages <- &comm.DisplayMessage{Message: "\a"}
 		}
 	}()
 
