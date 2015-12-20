@@ -98,20 +98,20 @@
    $( '#registration_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
 
-    $.ajax({
-      url: '/poop',
-      data: {
-        data: JSON.stringify({
-          rfid: '123123',
-        })
-      },
-      type: 'POST',
-    }).done(function (data) {
-      console.log('pooped')
-      
-      var jsonData = JSON.parse(data);
-      var code = jsonData['code'];
-      //~ var code = $( '#codeInputField' ).val();
+    //~ $.ajax({
+      //~ url: '/poop',
+      //~ data: {
+        //~ data: JSON.stringify({
+          //~ rfid: '123123',
+        //~ })
+      //~ },
+      //~ type: 'POST',
+    //~ }).done(function (data) {
+      //~ console.log('pooped')
+      //~ 
+      //~ var jsonData = JSON.parse(data);
+      //~ var code = jsonData['code'];
+      var code = $( '#codeInputField' ).val();
 
       var registrationData = {
         data: JSON.stringify({
@@ -141,9 +141,9 @@
           $('#login_form').submit();
         }
       })
-    })
+    });
 
-	});
+	//~ });
 
 })();
 
