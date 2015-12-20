@@ -18,7 +18,15 @@
     headerTag: "h3",
     bodyTag: "section",
     transitionEffect: "slideLeft",
-    autoFocus: true
+    autoFocus: true,
+	onFinishing: function (event, currentIndex)
+    {
+        return true;
+    },
+    onFinished: function (event, currentIndex)
+    {
+        form.submit()
+    }
   });
 
   var loginForm = $( '#login_form' );
@@ -61,25 +69,81 @@
     });
   });
 
-  $( '#login_submit' ).on( 'click', function () {
-    var json = {
-      data: {
+  $( '#login_form' ).on('submit', function (ev) {
+	  ev.preventDefault()
+	  
+    var data = {
+      data: JSON.stringify({
         username: $( '#username' ).val(),
         password: $( '#password' ).val()
-      }
+      })
     }
 
     $.ajax({
       url: '/login',
-      data: json,
+      data: data,
       type: 'POST'
     }).done( function ( data ) {
+		var jsonData = JSON.parse(data)
       if ( jsonData['status'] == 'error' ) {
-        ev.preventDefault();
+        console.error(data);
       } else if ( jsonData['status'] == 'ok' ) {
+        console.log('logged')
         HELPERS_MODULE.setCookie( 'sessionId', jsonData['session_id'], 1 );
+        location.reload();
       }
     })
+  } );
+  
+   $( '#registration_form' ).on('submit', function (ev) {
+	  console.log(" ______ AKSDFKA SJDJFAJSDJF ")
+	  ev.preventDefault()
+
+    $.ajax({
+      url: '/poop',
+      data: {
+        data: JSON.stringify({
+          rfid: '123123',
+        })
+      },
+      type: 'POST',
+    }).done(function (data) {
+      console.log('pooped')
+      
+      var jsonData = JSON.parse(data);
+      var code = jsonData['code'];
+      
+      var registrationData = {
+        data: JSON.stringify({
+          username: $( '#usernameLoginInput' ).val(),
+          password: $( '#passwordLoginInput' ).val(),
+          email: $( '#emailLoginInput' ).val(),
+          code: code,
+        })
+      }
+      
+      $.ajax({
+        url: '/register',
+        data: registrationData,
+        type: 'POST'
+      }).done( function ( data ) {
+        var jsonData = JSON.parse(data)
+        if ( jsonData['status'] == 'error' ) {
+          console.error(data);
+        } else if ( jsonData['status'] == 'ok' ) {
+          console.log('registered')
+          
+          var tmp = JSON.parse(registrationData.data);
+
+          $('#username').val(tmp['username'])
+          $('#password').val(tmp['password'])
+          
+          $('#login_form').submit();
+        }
+      })
+    })
+
+    
   } );
 
 })();
@@ -94,8 +158,6 @@
       var slots = jsonData['slots'];
 
       for ( var i = 0; i < slots.length; i++ ) {
-        console.log(slots[i])
-
         if ( slots[i] === 'error' ) {
           HELPERS_MODULE.switchToError( i );
         } else if ( slots[i] === 'off' ) {
