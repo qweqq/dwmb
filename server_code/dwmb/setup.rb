@@ -1,11 +1,11 @@
 require 'timers'
 require_relative 'config'
 require_relative 'database'
-
+require 'base64'
 
 module Dwmb
     class Setup
-        attr_accessor :current_slots, :alarm, :leaving, :connecting
+        attr_accessor :current_slots, :alarm, :leaving, :connecting, :timer
 
         class Alarm
             attr_accessor :alarm, :type, :slot
@@ -22,7 +22,7 @@ module Dwmb
             @connecting = nil
             @timers = Timers::Group.new
             @thread = Thread.new do
-                loo# p { @timers.wait }
+                loop { @timers.wait }
             end
             setTimers
         end
@@ -62,6 +62,29 @@ module Dwmb
             end
         end
 
+        def find_user_by(username)
+            return User.first(username:username) if username != "Unknown"
+            nil
+        end
+
+        def search_database(input)
+            search_result = Event.all **input
+            return processed(search_result)
+        end
+
+        def processed(search_result)
+            processed_results = []
+            search_result.each do |event|
+                processed_event = {}
+                processed_event["type"] = event.type
+                processed_event["time"] = event.time
+                processed_event["slot"] = event.slot
+                processed_event["username"] = event.user.username
+                processed_results << processed_event
+            end
+            return processed_results
+        end
+
         def on_ramp rfid
             current_slots.each_with_index do |slot, index|
                 user = slot[0]
@@ -70,15 +93,17 @@ module Dwmb
             return nil
         end
 
-        def state_update new_states
+        def save_shanpshot(name, snapshot="")
+            content = snapshot
+            decode_base64_content = Base64.decode64(content)
+            File.open(name, "wb") do |f|
+              f.write(decode_base64_content)
+            end
+        end
+
+        def state_update(new_states, snapshot)
             @timer.reset
             reset_alarm if alarm.alarm
-
-            # p "|-------NOW---------"
-            # p "| ", new_states
-            # p "| ", current_slots
-            # p "|----------------"
-
             result = :ok
 
             current_slots.each_with_index do |slot, index|
@@ -87,42 +112,37 @@ module Dwmb
                 new_state = new_states[index]
 
                 if (not current_slot_user and new_state == 1)
-                    # p "|slot was empty, now it is full"
                     if @connecting
-                        # p "|we have a user to connect"
                         @current_slots[index] = [@connecting, :none]
+                        time = Time.now.utc
+                        content = File.read(time.to_s)
+                        save_shanpshot(time, snapshot)
+                        Event.create(user: @connecting, slot:index.to_s, type: :connected, time:time, snapshot: time)
                         @connecting = nil
                         result = :connected
-                    else
-                        # p "|someone is messing with cables"
-                        result = :cable
                     end
                 elsif (current_slot_user and new_state == 0)
-                    # p "|we had a full slot, now it is empty"
                     if current_slot_state == :leaving
-                        # p "|the user has pooped and wants to get his bike!"
                         current_slots[index] = [nil, :none]
-                        result = :disconnected
+                        time = Time.now.utc
+                        content = File.read(time.to_s)
+                        save_shanpshot(time, snapshot)
+                        Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:time, snapshot: time)
                     else
-                        # p "|the user has NOT pooped, and someone is stealing his bike"
-                        current_slots[index] = [current_slot_user, :theft]
-                        alarm.alarm = true
-                        alarm.slot = index
-                        alarm.type = :theft
+                        if current_slots[index][1] != :theft
+                            current_slots[index] = [current_slot_user, :theft]
+                            alarm.alarm = true
+                            alarm.slot = index
+                            alarm.type = :theft
+                            time = Time.now.utc
+                            content = File.read(time.to_s)
+                            save_shanpshot(time, snapshot)
+                            Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: time)
+                        end
                         result = :theft
                     end
                 end
             end
-
-            if result == :ok
-                # p "|nothing changed... no poop, no nothing"
-            end
-
-            # p "|-------AFTER---------"
-            # p "|, ", new_states
-            # p "|, ", current_slots
-            # p "|----------------"
-
             return result
         end
     end

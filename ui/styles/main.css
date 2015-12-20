@@ -26,9 +26,7 @@ body {
   position: relative;
   width: 100%; }
 
-.user-buttons > .user_button {
-  display: inline-block;
-  margin-left: 10%;
+.user_button {
   background-image: url("../img/texture.jpg");
   background-size: contain;
   background-size: cover;
@@ -40,6 +38,10 @@ body {
   font-size: 20pt;
   color: white;
   cursor: pointer; }
+
+.user-buttons > .user_button {
+  display: inline-block;
+  margin-left: 10%; }
 
 .user_button > * {
   font-style: Arial, Helvetica, sans-serif; }

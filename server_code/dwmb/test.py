@@ -26,9 +26,15 @@ class Blah(unittest.TestCase):
 		data = urllib.urlencode({'data': json_encoded})
 		return data
 
-	def send_request(self, url, data):
+	def send_request(self, url, data=None):
 		full_url = "http://localhost:3000/" + str(url)
-		req = urllib2.Request(full_url, self.prepare_data(data))
+		
+		req = None
+		if data != None:
+			req = urllib2.Request(full_url, self.prepare_data(data))
+		else:
+			req = urllib2.Request(full_url)
+
 		response = urllib2.urlopen(req)
 		the_page = response.read()
 		return the_page
@@ -58,13 +64,27 @@ class Blah(unittest.TestCase):
 
 		return result
 
-	def send_default_alive(self, slots=[0, 0, 0, 0, 0, 0, 0, 0]):
+	def send_default_alive(self, slots):
 		result = self.send_request('/alive', {
 			'slots': slots,
 			'key': "6x9=42"
 		})
 
 		print("send_default_alive: result: ", result)
+
+		return result
+
+
+	def send_default_alive1(self):
+		return self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
+
+	def send_default_alive0(self):
+		return self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
+
+	def send_default_status(self):
+		result = self.send_request('/status')
+
+		print("send_default_status: result: ", result)
 
 		return result
 
@@ -85,7 +105,7 @@ class Blah(unittest.TestCase):
 	def test_poop_alive1(self):
 		result, code = self.send_default_poop()
 
-		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive1()
 
 		self.assertEqual(result, '{"status":"ok","message":"connected","slots":[1,0,0,0,0,0,0,0]}')
 
@@ -94,27 +114,27 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_registration(code);
 
-		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive1()
 
 		self.assertEqual(result, '{"status":"ok","message":"connected","slots":[1,0,0,0,0,0,0,0]}')
 
 	def test_theft(self):
 		result, code = self.send_default_poop()
 
-		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive1()
 
-		result = self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive0()
 
 		self.assertEqual(result, '{"status":"error","message":"theft","slots":[2,0,0,0,0,0,0,0]}')
 
 	def test_poop_alive1_poop_alive0(self):
 		result, code = self.send_default_poop()
 
-		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive1()
 
 		result, code = self.send_default_poop()
 
-		result = self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive0()
 
 		self.assertEqual(result, '{"status":"ok","message":"disconnected","slots":[0,0,0,0,0,0,0,0]}')
 
@@ -123,11 +143,11 @@ class Blah(unittest.TestCase):
 
 		result = self.send_default_registration(code)
 
-		result = self.send_default_alive([1, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive1()
 
 		result, code = self.send_default_poop()
 
-		result = self.send_default_alive([0, 0, 0, 0, 0, 0, 0, 0])
+		result = self.send_default_alive0()
 
 		self.assertEqual(result, '{"status":"ok","message":"disconnected","slots":[0,0,0,0,0,0,0,0]}')
 
@@ -137,6 +157,21 @@ class Blah(unittest.TestCase):
 		result, code = self.send_default_poop()
 		self.assertEqual(code, "")
 
+	def test_poop_alive1_alive0_poop_status(self):
+		
+		result, code = self.send_default_poop()
+		
+		result = self.send_default_alive1()
+		
+		result = self.send_default_alive0()
+
+		result = self.send_default_status()
+
+		result, code = self.send_default_poop()
+
+		result = self.send_default_status()
+		
+		self.assertTrue(False)
 	def test_drop(self):
 		pass
 

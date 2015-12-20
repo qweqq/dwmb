@@ -9,12 +9,11 @@ module Dwmb
   class Server < Sinatra::Base
     set :bind, '0.0.0.0'
     set :server, 'thin'
-    set :public_folder, '../static'
+    set :public_folder, Config::Static
 
     def setup
         @@setup ||= Setup.new
     end
-
 
     get "/" do
       redirect '/index.html'
@@ -46,8 +45,18 @@ module Dwmb
         p Card.all
         return "ok"
     end
+#------------------------------FRONTEND----------------------------
+    #data = {code:....}
+    post '/check_code' do
+        input = JSON.parse(params["data"])
+        user = User.first(code:input["code"])
+        return {status:"ok"}.to_json if user
+        return {status:"error"}.to_json
+    end
+    #return-{status:....}
 
-    #data = {username: hsdfsd, email: dskj, password: dffdf, card: 1234}
+
+    #data = {username:..., email:...., password:..., code:....}
     post '/register' do
       input = JSON.parse(params["data"])
       user = User.first(code:input["code"])
@@ -62,10 +71,12 @@ module Dwmb
       user.email = input["email"]
       user.code = ""
       user.save!
-
+      Event.create(user: user, slot:"", type: :registered, time:Time.now.utc)
       {status:"ok", message:"registered"}.to_json
     end
+    #return - {status:..., message:...}
 
+    #data = {username:..., email:....}
     post '/login' do
       login_info = JSON.parse(params["data"])
       user = User.first(username:login_info["username"])
@@ -74,16 +85,44 @@ module Dwmb
         return {status:"error", message:"Wrong password"}.to_json
       end
 
+      Event.create(user: user, slot:"", type: :logged, time:Time.now.utc)
       session_id = SecureRandom.base64(32)
       Session.create(session_id:session_id, user:user)
       {status:"ok", session_id:session_id}.to_json
     end
+    #return- {status:...., session_id:.....}
 
 	get '/status' do
+        setup.timer.reset
 		slots = setup.serialise_slots(empty="off", taken="on", error="error")
-
 		{status: "ok", slots: slots}.to_json
 	end
+
+    #-----------------------------!!!!!!!!!!!!!!!!!!!!!!!!------------------------
+    #data = {[username:....], [date:[date_start, date_end]], [slot:...], [type...]}
+    post '/search' do
+        input = JSON.parse(params["data"])
+        search_input = {}
+        if input.has_key?("username")
+            user = User.first(username:input["username"])
+            if user
+                search_input[:user] = user
+            else
+                return {status: "ok", result:[]}.to_json
+            end
+        end
+
+        search_input[:slot] = input["slot"] if input.has_key?("slot")
+        search_input[:type] = input["type"] if input.has_key?("type")
+
+        if search_input.has_key?("date")
+            search_input[:date] = search_input["date"][0]..search_input["date"][1]
+        end
+
+        search_result = setup.search_database search_input
+        return {status:"ok", result:search_result }.to_json
+    end
+    #return={status:...result:[{"slot":..., "username":..., "type":...,"time":...}.....{}]}
 
     post '/secret' do
       session_id = JSON.parse(params["data"])["session_id"]
@@ -94,13 +133,11 @@ module Dwmb
         return {status:"error", message:"Log in, you fuck"}.to_json
       end
     end
-
     #***********************DEVICE**********************************************
 
-    #json: data = {rfid = xxxxxx}
+    #data = {rfid:....}
     post '/poop' do
         rfid = JSON.parse(params["data"])["rfid"]
-
         card = Card.first(rfid:rfid)
         user = if card then card.user else nil end
 
@@ -111,6 +148,7 @@ module Dwmb
                     setup.current_slots[user_on_ramp] = [nil, :none]
                     setup.reset_alarm
                     setup.mark_user_for_leaving(user)
+                    Event.create(user: user, slot: user_on_ramp.to_s, type: :restored, time:Time.now.utc)
                     return {status: "ok", message: "disconnected"}.to_json
                 else
                     setup.mark_user_for_leaving(user)
@@ -133,13 +171,14 @@ module Dwmb
             return {status: "ok", message: "connecting", code: code}.to_json
         end
     end
-    #message: ["bikedetach", "bikeattach"]
+    #return = {status:..., message:..., [code:....]}
 
-    #json: data = {state = 8*[_], key = "xxxxx"}
+    #data = {state:...., key:..., snapshot:....}
     post '/alive' do
         data = JSON.parse(params["data"])
         new_states = data["slots"]
         key = data["key"]
+        picture = data["snapshot"] if data["snapshot"]
 
         response = {
             status: "ok",
@@ -151,18 +190,15 @@ module Dwmb
             response[:status] = "error"
             response[:message] = "wrong key"
         else
-            message = setup.state_update(new_states)
+            message = setup.state_update(new_states, picture)
             response[:status] = if message == :theft then 'error' else 'ok' end
             response[:message] = message.to_s
         end
 
-
         response[:slots] = setup.serialise_slots
-
-        #puts response.to_json
         return response.to_json
     end
+    #return-{status:...., message:...., slots:...}
     #message: ["connected", "theft", "disconnected", "cable", "ok"]
-
   end
 end

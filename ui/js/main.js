@@ -1,6 +1,20 @@
 (function () {
 
-  $("#registration_form div").steps({
+  var form = $("#registration_form");
+
+/*
+  form.validate({
+    errorPlacement: function errorPlacement(error, element) {
+      element.before(error);
+    },
+    rules: {
+      confirm: {
+          equalTo: ""
+      }
+    }
+  });*/
+
+  form.children("div").steps({
     headerTag: "h3",
     bodyTag: "section",
     transitionEffect: "slideLeft",
@@ -58,6 +72,8 @@
       var jsonData = $.parseJSON( json );
       var slots = jsonData['slots'];
 
+      console.log(slots);
+
       for ( var i = 0; i < slots.length; i++ ) {
         if ( slots[i] === 'error' ) {
           HELPERS_MODULE.switchToError( i );
@@ -66,8 +82,9 @@
         } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
           HELPERS_MODULE.switchOffSlot( i );
         }
-      }      
+      }
     } )
   }, 1000);
 
 })();
+

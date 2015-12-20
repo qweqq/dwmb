@@ -22,8 +22,10 @@ module Dwmb
     property :username,   String
     property :password,   BCryptHash
     property :code,       String
+
     has 1, :card
     has n, :sessions
+    has n, :events
   end
 
   class Session
@@ -33,9 +35,20 @@ module Dwmb
       belongs_to :user
   end
 
+  class Event
+      include DataMapper::Resource
+      property :id, Serial
+      property :time, DateTime
+      property :type, Enum[ :registered, :connected, :disconnected, :alarm, :logged, :restored]
+      property :slot, String
+      property :snapshot, String
+      belongs_to :user
+  end
+
   DataMapper.finalize
 
   Card.auto_upgrade!
   User.auto_upgrade!
   Session.auto_upgrade!
+  Event.auto_upgrade!
 end
