@@ -94,11 +94,15 @@
       var slots = jsonData['slots'];
 
       for ( var i = 0; i < slots.length; i++ ) {
+        console.log(slots[i])
+
         if ( slots[i] === 'error' ) {
           HELPERS_MODULE.switchToError( i );
-        } else if ( slots[i] === 'on' ) {
+        } else if ( slots[i] === 'off' ) {
+          HELPERS_MODULE.removeError( i );
           HELPERS_MODULE.switchOnSlot( i );
         } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
+          HELPERS_MODULE.removeError( i );
           HELPERS_MODULE.switchOffSlot( i );
         }
       }

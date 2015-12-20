@@ -127,7 +127,13 @@ module Dwmb
 
     #data = {session_id:...}
     post '/user_info' do
-        session_id = JSON.parse(params["data"])["session_id"]
+		p params
+		p '-----------'
+        lala = params["data"]
+        p lala
+        p '-----------'
+        
+        session_id = lala["session_id"]
         session = Session.first(session_id:session_id)
         return{status:"not logged"}.to_json unless session
         user = session.user
