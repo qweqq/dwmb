@@ -95,7 +95,7 @@
     })
   } );
 
-   $( '#registration_form' ).on('submit', function (ev) {
+  $( '#registration_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
 
     //~ $.ajax({
@@ -108,7 +108,7 @@
       //~ type: 'POST',
     //~ }).done(function (data) {
       //~ console.log('pooped')
-      //~ 
+      
       //~ var jsonData = JSON.parse(data);
       //~ var code = jsonData['code'];
       var code = $( '#codeInputField' ).val();
@@ -141,10 +141,8 @@
           $('#login_form').submit();
         }
       })
-    });
-
-	//~ });
-
+    //~ });
+	});
 })();
 
 (function () {

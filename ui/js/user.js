@@ -46,7 +46,7 @@
       } else if ( jsonData['status'] == 'ok' ) {
         $( '.bike-board' ).show( 'fast' );
 
-        $( '#slotNumber' ).html( jsonData['slot'] );
+        $( '#slotNumber' ).html(-parseInt(jsonData['slot']) + 1 );
       }
     });
   }, 1000);
