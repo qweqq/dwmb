@@ -53,7 +53,7 @@
 
   setInterval(function(){
     $.ajax({
-      url: '/status_all'
+      url: '/status'
     }).done( function ( json ) {
       var jsonData = $.parseJSON( json );
       var slots = jsonData['slots'];
