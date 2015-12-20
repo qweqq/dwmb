@@ -79,7 +79,7 @@ module Dwmb
       {status:"ok", session_id:session_id}.to_json
     end
 
-	post '/status' do
+	get '/status' do
 		slots = setup.serialise_slots
 		for index in 0 ... slots.size
 			if slots[index] == 0
