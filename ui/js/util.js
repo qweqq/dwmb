@@ -7,13 +7,15 @@ var HELPERS_MODULE = {
     }
     document.getElementById( "alarm" ).pause();
 
-    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );  
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length ); 
   },
   switchOnSlot: function ( indexOfSlot ) {
     var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
 
     if ( !slot.hasClass( 'on' ) ) {
       slot.addClass( 'on' );
+
+      slot.attr( 'title', 'свободно' );
     }
 
     $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
@@ -25,6 +27,8 @@ var HELPERS_MODULE = {
 
     if ( slot.hasClass( 'on' ) ) {
       slot.removeClass( 'on' );
+
+      slot.attr( 'title', 'заето' );
     }
 
     $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
