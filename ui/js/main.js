@@ -72,6 +72,8 @@
       var jsonData = $.parseJSON( json );
       var slots = jsonData['slots'];
 
+      console.log(slots);
+
       for ( var i = 0; i < slots.length; i++ ) {
         if ( slots[i] === 'error' ) {
           HELPERS_MODULE.switchToError( i );
@@ -80,14 +82,9 @@
         } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
           HELPERS_MODULE.switchOffSlot( i );
         }
-      }      
+      }
     } )
   }, 1000);
 
 })();
 
-/*(function () {
-
-  
-
-})();*/
