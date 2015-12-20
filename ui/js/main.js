@@ -70,29 +70,4 @@
     } )
   }, 1000);
 
-/*  var lights = [ 'on', 'off', 'off', 'on', 'on', 'off', 'on', 'off' ];
-
-  for ( var i = 0; i < lights.length; i++ ) {
-    if ( lights[i] === 'error' ) {
-      HELPERS_MODULE.switchToError( i );
-    } else if ( lights[i] === 'on' ) {
-      HELPERS_MODULE.switchOnSlot( i );
-    } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
-      HELPERS_MODULE.switchOffSlot( i );
-    }
-  }*/
-
-/*  $( '#board1 .light' ).on( 'click', function ( ev ) {
-
-    var slot = $( ev.target );
-    var slotId = slot.attr( 'data-id' );
-
-    if ( slot.hasClass( 'on' ) ) {
-      HELPERS_MODULE.switchOffSlot( slotId );
-    } else {
-      HELPERS_MODULE.switchOnSlot( slotId );
-    }
-
-  });*/
-
 })();
