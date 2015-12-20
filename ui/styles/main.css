@@ -188,6 +188,9 @@ body {
 #registration_form ul li {
   margin: 0 auto; }
 
+#registration_form li > a {
+  color: #f1f1f1; }
+
 .footer {
   bottom: 0;
   position: fixed;

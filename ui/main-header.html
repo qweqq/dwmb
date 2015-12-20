@@ -15,12 +15,12 @@
 
   <form id="registration_form" class="form-horizontal" action="#" hidden="hidden">
     <div>
-      <h3>Въвеждане на код</h3>
+      <h3><!-- Въвеждане на код --></h3>
       <section>
           <form action="" class="form-horizontal">
             <div class="form-group">
               <label for="codeInputField">Код от устройството за заключване на колела</label>
-              <input type="text" class="form-control" id="codeInputField">
+              <input type="text" class="form-control" id="codeInputField" required>
             </div>
             <!-- <input type="submit" value="Продължи"> -->
           </form> 
@@ -30,11 +30,15 @@
           <form action="" class="form-horizontal">
             <div class="form-group">
               <label for="usernameLoginInput">Потребителско име *</label>
-              <input type="text" class="form-control" id="usernameLoginInput">
+              <input type="text" class="form-control" id="usernameLoginInput" required>
             </div>
             <div class="form-group">
               <label for="passwordLoginInput">Парола *</label>
-              <input type="password" class="form-control" id="passwordLoginInput" placeholder="Код">
+              <input type="password" class="form-control" id="passwordLoginInput" required>
+            </div>
+            <div class="form-group">
+              <label for="emailLoginInput">E-mail *</label>
+              <input type="email" class="form-control" id="emailLoginInput" required>
             </div>
           </form> 
       </section>
