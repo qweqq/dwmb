@@ -2,11 +2,12 @@ var HELPERS_MODULE = {
   removeError: function ( indexOfSlot ) {
     var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
 
-    if ( !slot.hasClass( 'error' ) ) {
-      slot.addClass( 'error' );
+    if ( slot.hasClass( 'error' ) ) {
+      slot.removeClass( 'error' );
     }
+    document.getElementById( "alarm" ).pause();
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );  
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );  
   },
   switchOnSlot: function ( indexOfSlot ) {
     var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
@@ -15,7 +16,7 @@ var HELPERS_MODULE = {
       slot.addClass( 'on' );
     }
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
   },
   switchOffSlot: function ( indexOfSlot ) {
     var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
@@ -26,14 +27,15 @@ var HELPERS_MODULE = {
       slot.removeClass( 'on' );
     }
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
   },
   switchToError: function ( indexOfSlot ) {
     this.switchOnSlot();
 
     $( "#board1 [data-id='" + indexOfSlot + "']" ).addClass( 'error' );
+    document.getElementById( "alarm" ).play();
 
-    $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
+    $( '#freeSlots' ).html( $( '#board1 .light.on:not(.error)' ).length );
   },
   setCookie: function ( cname, cvalue, exdays ) {
     var d = new Date();
@@ -58,6 +60,6 @@ var HELPERS_MODULE = {
     return cookie !== "";
   },
   deleteCookie: function ( cname ) {
-    document.cookie = name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT;'
+    this.setCookie( cname, '', 0 )
   }
 };

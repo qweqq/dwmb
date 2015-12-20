@@ -17,29 +17,37 @@
     } );
   } );
 
+  $( '#logoutButton' ).on( 'click', function () {
+    HELPERS_MODULE.setCookie('sessionId', '');
+    location.reload()
+  } );
+
 })();
 
 (function () {
-  var sessionId = getCookie('sessionId');
+  var sessionId = HELPERS_MODULE.getCookie('sessionId');
 
   var data = {
     data: {
       session_id: sessionId
     }
-  }
+  };
 
   $.ajax({
     url: '/user_info',
-    data: data
+    data: data,
+    type: 'POST'
   }).done( function ( data ) {
-    var jsonData = $.parseJSON( json );
+    var jsonData = $.parseJSON( data );
 
-    if ( jsonData['status']== 'not checked' ) {
+    console.log( jsonData );
+
+    if ( jsonData['status'] == 'not checked' ) {
       $( '.bike-board' ).hide( 'fast' );
     } else if ( jsonData['status'] == 'ok' ) {
       $( '.bike-board' ).show( 'fast' );
 
       $( '#slotNumber' ).html( jsonData['slot'] );
     }
-  } );
+  });
 })();

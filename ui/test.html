@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lalalla</title>
+	</head>
+	<body>
+		<script>
+			 $.ajax({
+			      url: '/login',
+			      data: json,
+      type: 'POST'
+    }).done( function ( data ) {
+      if ( jsonData['status'] == 'error' ) {
+        ev.preventDefault();
+      } else if ( jsonData['status'] == 'ok' ) {
+        HELPERS_MODULE.setCookie( 'sessionId', jsonData['session_id'], 1 );
+      }
+    })		</script>
+	</body>
+</html>
