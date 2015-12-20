@@ -7,7 +7,7 @@ var HELPERS_MODULE = (function () {
         slot.addClass( 'on' );
       }
 
-      $( '#freeSlots' ).html( $( '#board1 .light:not(.on)' ).length );
+      $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
     },
     switchOffSlot: function ( indexOfSlot ) {
       var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
@@ -16,12 +16,14 @@ var HELPERS_MODULE = (function () {
         slot.removeClass( 'on' );
       }
 
-      $( '#freeSlots' ).html( $( '#board1 .light:not(.on)' ).length );
+      $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
     },
     switchToError: function ( indexOfSlot ) {
       this.switchOnSlot();
 
       $( "#board1 [data-id='" + indexOfSlot + "']" ).addClass( 'error' );
+
+      $( '#freeSlots' ).html( $( '#board1 .light:not(.on):not(.error)' ).length );
     }
   }
 })();
