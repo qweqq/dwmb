@@ -93,7 +93,7 @@ module Dwmb
     #return- {status:...., session_id:.....}
 
 	get '/status' do
-        @timer.reset
+        setup.timer.reset
 		slots = setup.serialise_slots(empty="off", taken="on", error="error")
 		{status: "ok", slots: slots}.to_json
 	end
