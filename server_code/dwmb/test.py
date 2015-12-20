@@ -27,7 +27,7 @@ class Blah(unittest.TestCase):
 		return data
 
 	def send_request(self, url, data):
-		full_url = "http://localhost:12345/" + str(url)
+		full_url = "http://localhost:3000/" + str(url)
 		req = urllib2.Request(full_url, self.prepare_data(data))
 		response = urllib2.urlopen(req)
 		the_page = response.read()
