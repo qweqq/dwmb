@@ -15,6 +15,7 @@ module Dwmb
         @@setup ||= Setup.new
     end
 
+
     get "/" do
       redirect '/index.html'
     end
@@ -81,14 +82,15 @@ module Dwmb
 	post '/status' do
 		slots = setup.serialise_slots
 		for index in 0 ... slots.size
-			if slots[index] == 0:
+			if slots[index] == 0
 				slots[index] = 'on'
-			elsif slots[index] == 1:
+			elsif slots[index] == 1
 				slots[index] = 'off'
 			elsif slots[index] == 2
 				slots[index] = 'error'
 			else
 				raise
+			end
 		end
 		{status: "ok", slots: slots}.to_json
 	end
