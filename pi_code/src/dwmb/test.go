@@ -8,6 +8,7 @@ import (
 	"dwmb/display"
 	"dwmb/request"
 	"dwmb/rfid"
+	"dwmb/sound"
 )
 
 func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
@@ -56,6 +57,9 @@ func main() {
 
 	state := &comm.State{Message: ""}
 	tag := &rfid.Tag{}
+
+	sound := sound.NewSound("/tmp")
+	sound.Play("woosh")
 
 	messages <- &comm.DisplayMessage{Message: "hi!"}
 
