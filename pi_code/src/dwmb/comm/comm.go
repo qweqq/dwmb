@@ -96,19 +96,21 @@ func send(f *serial.Port, displayMessages <-chan *DisplayMessage) {
 				f.Write([]byte("d" + strings.Replace(message.Message, "\n", "\v", -1) + "\n"))
 			}
 		}
-		f.Write([]byte("l"))
-		for lamp := range message.Lights {
+		ledMessage := make([]byte, 8+2)
+		ledMessage[0] = 'l'
+		for i, lamp := range message.Lights {
 			switch lamp {
-			case Off:
-				f.Write([]byte("o"))
 			case Red:
-				f.Write([]byte("r"))
+				ledMessage[i+1] = 'r'
 			case Green:
-				f.Write([]byte("g"))
+				ledMessage[i+1] = 'g'
 			case Yellow:
-				f.Write([]byte("y"))
+				ledMessage[i+1] = 'y'
+			default:
+				ledMessage[i+1] = 'o'
 			}
 		}
-		f.Write([]byte("\n"))
+		ledMessage[9] = '\n'
+		f.Write(ledMessage)
 	}
 }

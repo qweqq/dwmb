@@ -19,14 +19,13 @@ func processResponse(messages chan<- *comm.DisplayMessage, messageTimer *time.Ti
 
 	message := &comm.DisplayMessage{}
 
-	if resp.Message != "" && resp.Message != "ok" {
+	if resp.Message != "" && resp.Message != "ok" && resp.Message != "cable" {
 		text, timeout := display.MakeMessage(resp)
 		messageTimer.Reset(timeout * time.Second)
 		message.Message = text
 	}
 
 	for i, slot := range resp.Slots {
-		log.Printf("i: %d", i)
 		switch slot {
 		case request.Free:
 			message.Lights[i] = comm.Green
