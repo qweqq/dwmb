@@ -102,7 +102,9 @@ module Dwmb
             end
         end
 
-        def send_mail (email, snapshot_name)
+        def send_mail (email, name)
+            snapshot_name = File.join(Config::Snapshot_folder, name)
+
             Pony.mail({
     			:to => email,
     			:subject => "DWMB: Alarm!",
@@ -149,7 +151,7 @@ module Dwmb
                             alarm.type = :theft
                             time = Time.now.utc
                             save_snapshot(time.to_i.to_s, snapshot) if snapshot
-                            filename = time.to_i.to_s + ".jpg"
+                                filename = time.to_i.to_s + ".jpg"
                             send_mail(current_slot_user.email, filename) if current_slot_user.email
                             Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: filename)
                         end
