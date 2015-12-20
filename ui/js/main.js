@@ -71,7 +71,7 @@
 
   $( '#login_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
-	  
+
     var data = {
       data: JSON.stringify({
         username: $( '#username' ).val(),
@@ -94,7 +94,7 @@
       }
     })
   } );
-  
+
    $( '#registration_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
 
@@ -111,8 +111,8 @@
       
       var jsonData = JSON.parse(data);
       var code = jsonData['code'];
-      //~ var code = $( '#codeLoginInput' ).val();
-      
+      //~ var code = $( '#codeInputField' ).val();
+
       var registrationData = {
         data: JSON.stringify({
           username: $( '#usernameLoginInput' ).val(),
@@ -121,7 +121,9 @@
           code: code,
         })
       }
-      
+
+      console.log('code:', code, "registrationData:", registrationData);
+
       $.ajax({
         url: '/register',
         data: registrationData,
@@ -141,8 +143,13 @@
       })
     })
 
+<<<<<<< HEAD
     
   } );
+=======
+
+  //~ } );
+>>>>>>> 6cb971f53e35e57f7d4eef72242c7a4a0f059e69
 
 })();
 
@@ -170,4 +177,3 @@
   }, 1000);
 
 })();
-
