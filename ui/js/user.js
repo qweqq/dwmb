@@ -17,6 +17,11 @@
     } );
   } );
 
+  $( '#logoutButton' ).on( 'click', function () {
+    HELPERS_MODULE.setCookie('sessionId', '');
+    location.reload()
+  } );
+
 })();
 
 (function () {

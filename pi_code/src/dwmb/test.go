@@ -73,7 +73,7 @@ func main() {
 	for {
 		select {
 		case state = <-states:
-			state.Snapshot = "/tmp/test.jpg"
+			state.Snapshot = "/tmp/cam1/lastsnap.jpg"
 			resp, err := server.SendState(state)
 			if err != nil {
 				log.Print(err)
