@@ -47,15 +47,18 @@ body {
 
   border-image: url( '' ) 27 27 27 27 round round;
 
-  border: 1px solid white;
+  border: 2px solid white;
   border-radius: 10px;
 
-  padding: 25px 35px;
+  padding: 25px;
 
   background-color: $header-buttons-color;
 
   font-weight: bold;
+  font-size: 19pt;
   color: $header-buttons-text-color;
+
+  cursor: pointer;
 }
 
 .content-container {
@@ -124,7 +127,7 @@ body {
   background-color: #333;
   color: white;
 
-  font-weight: bold;
+  //font-weight: bold;
   text-align: center;
 
   width: 20%;
@@ -154,7 +157,10 @@ body {
 
   height: 40px;
   width: 40px;
+
+  cursor: pointer;
 }
+
 .subscribtion-button.twitter {
   @include background-image ( '../img/twitter.png' )
 }
@@ -163,7 +169,18 @@ body {
 }
 
 #login_form {
+  background-color: #ddd;
+
+  height: 230px;
+  width: 400px;
+
+  padding: 20px;
   position: absolute;
+
+  z-index: 1000;
+}
+#login_submit {
+  float: right;
 }
 
 .footer {

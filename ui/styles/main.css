@@ -29,12 +29,14 @@ body {
   display: inline-block;
   margin-left: 10%;
   border-image: url("") 27 27 27 27 round round;
-  border: 1px solid white;
+  border: 2px solid white;
   border-radius: 10px;
-  padding: 25px 35px;
+  padding: 25px;
   background-color: #016F54;
   font-weight: bold;
-  color: white; }
+  font-size: 19pt;
+  color: white;
+  cursor: pointer; }
 
 .content-container {
   display: flex;
@@ -84,7 +86,6 @@ body {
 .board > .counter {
   background-color: #333;
   color: white;
-  font-weight: bold;
   text-align: center;
   width: 20%;
   height: 25px;
@@ -102,7 +103,8 @@ body {
   margin-left: 10%;
   float: right;
   height: 40px;
-  width: 40px; }
+  width: 40px;
+  cursor: pointer; }
 
 .subscribtion-button.twitter {
   background-image: url("../img/twitter.png");
@@ -115,7 +117,15 @@ body {
   background-size: cover; }
 
 #login_form {
-  position: absolute; }
+  background-color: #ddd;
+  height: 230px;
+  width: 400px;
+  padding: 20px;
+  position: absolute;
+  z-index: 1000; }
+
+#login_submit {
+  float: right; }
 
 .footer {
   bottom: 0;

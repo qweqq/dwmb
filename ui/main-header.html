@@ -1,9 +1,15 @@
 <div class="user-buttons">
   <div id="login" class="user_button">Вход</div>
   <form id="login_form" action="#" hidden="hidden">
-    Потребителско име * <input type="text" name="username"><br>
-    Парола * <input type="password" name="password"><br>
-    <input type="button" value="ПРОДЪЛЖИ">
+    <div class="form-group">
+      <label for="username">Потребителско име *</label>
+      <input type="text" class="form-control" id="username">
+    </div>
+    <div class="form-group">
+      <label for="password">Парола *</label>
+      <input type="password" class="form-control" id="password">
+    </div>
+    <input id="login_submit" class="btn btn-default" type="button" value="Продължи">
   </form>
   <div id="register" class="user_button">Регистрация</div>
 
