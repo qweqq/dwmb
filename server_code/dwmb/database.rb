@@ -45,6 +45,12 @@ module Dwmb
       belongs_to :user
   end
 
+  class Event
+      include DataMapper::Resource
+      property :id, Serial
+      property :chatid, String
+  end
+
   DataMapper.finalize
 
   Card.auto_upgrade!

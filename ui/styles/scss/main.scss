@@ -56,7 +56,8 @@ body {
 
   padding: 10px 20px;
 
-  background-color: $header-buttons-color;
+  //background-color: $header-buttons-color;
+  border-radius: 5px;
 
   //font-weight: bold;
   font-size: 20pt;
@@ -78,6 +79,28 @@ body {
 
   width: 142px;
 
+  float: right;
+}
+.user-profile #profileInfo,
+.user-profile #userInfoEdit {
+  width: 300px;
+
+  padding: 20px;
+
+  position: absolute;
+  right: 153px;
+  top: 81px;
+
+  @include background-image( $tr-light-image );
+  color: white;
+
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
+
+  z-index: 200;
+}
+
+.float-right {
   float: right;
 }
 
@@ -103,7 +126,8 @@ body {
   
   border: 1px solid black; 
   border-radius: 10px;
-
+  
+  align: center;
   margin: 0 auto;
 }
 
@@ -174,16 +198,22 @@ body {
 }
 
 .board > .counter {
-  background-color: #333;
+  @include background-image($tr-light-image);
+  //background-color: #333;
   color: white;
+  font-size: 20px;
 
-  //font-weight: bold;
+  font-weight: bold;
   text-align: center;
 
   width: 20%;
-  height: 25px;
+  height: 35px;
+  border-radius: 5px;
 
   margin: 0 auto;
+  position: relative;
+  align: center;
+  top: 10px;
 }
 
 .menu > .subscribtion-buttons {
@@ -270,6 +300,29 @@ body {
 
 #registration_form li > a {
   color: #f1f1f1;
+}
+
+.bike-board {
+  position: absolute;
+  text-align: center;
+
+  width: 30%;
+  height: 50px;
+
+  border-radius: 10px;
+
+  left: 35%;
+  top: 30%;
+}
+
+.bike-board > .info {
+  font-size: 15pt;
+  font-align: center;
+}
+.bike-board #slotNumber,
+.bike-board #timer {
+  font-weight: bold;
+  color: #A3B25E;
 }
 
 .footer {

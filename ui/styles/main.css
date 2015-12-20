@@ -30,11 +30,12 @@ body {
   background-image: url("../img/texture.jpg");
   background-size: contain;
   background-size: cover;
+  heigth: 20px;
   opacity: 0.7;
   filter: alpha(opacity=70);
   /* For IE8 and earlier */
   padding: 10px 20px;
-  background-color: #035E9F;
+  border-radius: 5px;
   font-size: 20pt;
   color: white;
   cursor: pointer; }
@@ -49,6 +50,25 @@ body {
 .user-profile .profile-button {
   font-align: center;
   width: 142px;
+  float: right; }
+
+.user-profile #profileInfo,
+.user-profile #userInfoEdit {
+  width: 300px;
+  padding: 20px;
+  position: absolute;
+  right: 153px;
+  top: 81px;
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
+  color: white;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  /* For IE8 and earlier */
+  z-index: 200; }
+
+.float-right {
   float: right; }
 
 .content-container {
@@ -68,6 +88,7 @@ body {
   height: 145px;
   border: 1px solid black;
   border-radius: 10px;
+  align: center;
   margin: 0 auto; }
 
 .board > .pipe {
@@ -123,12 +144,20 @@ body {
   transition: box-shadow 0.5s, background-color 0.5s, border 0.5s; }
 
 .board > .counter {
-  background-color: #333;
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
   color: white;
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
   width: 20%;
-  height: 25px;
-  margin: 0 auto; }
+  height: 35px;
+  border-radius: 5px;
+  margin: 0 auto;
+  position: relative;
+  align: center;
+  top: 10px; }
 
 .menu > .subscribtion-buttons {
   display: inline-block;
@@ -197,6 +226,24 @@ body {
 
 #registration_form li > a {
   color: #f1f1f1; }
+
+.bike-board {
+  position: absolute;
+  text-align: center;
+  width: 30%;
+  height: 50px;
+  border-radius: 10px;
+  left: 35%;
+  top: 30%; }
+
+.bike-board > .info {
+  font-size: 15pt;
+  font-align: center; }
+
+.bike-board #slotNumber,
+.bike-board #timer {
+  font-weight: bold;
+  color: #A3B25E; }
 
 .footer {
   bottom: 0;

@@ -4,7 +4,7 @@ require 'json'
 require_relative 'database'
 require_relative 'setup'
 require 'securerandom'
-require 'pony'
+#require 'pony'
 
 module Dwmb
   class Server < Sinatra::Base
@@ -46,25 +46,7 @@ module Dwmb
         p Card.all
         return "ok"
     end
-    
-    #get '/mail' do
-	#	Pony.mail({
-	#		:to => 'hrstefanov@gmail.com',
-	#		:subject => "DWMB: Alarm!",
-	#		:body => "Your bike is stolen!",
-	#		:via => :smtp,
-	#		:via_options => {
-	#			:address              => 'smtp.gmail.com',
-	#			:port                 => '587',
-	#			:enable_starttls_auto => true,
-	#			:user_name            => 'dwmb.mailer@gmail.com',
-	#			:password             => 'dwmbpassword',
-	#			:authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
-	#			:domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
-	#		}
-	#	})
-	#
-    #end
+
 #------------------------------FRONTEND----------------------------
     #data = {code:....}
     post '/check_code' do
@@ -80,8 +62,7 @@ module Dwmb
     post '/register' do
       input = JSON.parse(params["data"])
       user = User.first(code:input["code"])
-
-      puts "register: user: ", user
+      return {status:"error", message: "Wrong code"}.to_json unless user
 
       return {status:"error", message:'Username taken'}.to_json if User.first(username:input["username"])
       return {status:"error", message:'Email registered'}.to_json if User.first(email:input["email"])
@@ -96,7 +77,7 @@ module Dwmb
     end
     #return - {status:..., message:...}
 
-    #data = {username:..., email:....}
+    #data = {username:..., password:....}
     post '/login' do
       login_info = JSON.parse(params["data"])
       user = User.first(username:login_info["username"])
@@ -144,15 +125,27 @@ module Dwmb
     end
     #return={status:...result:[{"slot":..., "username":..., "type":...,"time":...}.....{}]}
 
-    post '/secret' do
-      session_id = JSON.parse(params["data"])["session_id"]
-      session = Session.first(session_id:session_id)
-      if session
-        return {status:"ok", message:""}.to_json
-      else
-        return {status:"error", message:"Log in, you fuck"}.to_json
-      end
+    #data = {session_id:...}
+    post '/user_info' do
+        session_id = JSON.parse(params["data"])["session_id"]
+        session = Session.first(session_id:session_id)
+        return{status:"not logged"}.to_json unless session
+        user = session.user
+        rfid = user.card.rfid
+        user_index = on_ramp rfid
+        if user_index
+            search_input = {}
+            search_input[:user] = user
+            search_input[:slot] = user_index
+            search_input[:type] = :connected
+            search_output = Events.last **search_input
+            time = search_output.time
+            return{status:"ok", slot:user_index.to_s, time:time}.to_json
+        else
+            return {status:"not checked"}.to_json
+        end
     end
+
     #***********************DEVICE**********************************************
 
     #data = {rfid:....}
@@ -160,7 +153,7 @@ module Dwmb
         rfid = JSON.parse(params["data"])["rfid"]
         card = Card.first(rfid:rfid)
         user = if card then card.user else nil end
-
+        code = ""
         if user
             user_on_ramp = setup.on_ramp(rfid)
             if user_on_ramp
@@ -175,8 +168,13 @@ module Dwmb
                     return {status: "ok", message: "disconnecting"}.to_json
                 end
             else
+                if user.username == "Unknown"
+                    code = sprintf '%05d', SecureRandom.random_number(99999)
+                    user.code = code
+                    user.save!
+                end
                 setup.connecting = user
-                return {status: "ok", message: "connecting"}.to_json
+                return {status: "ok", message: "connecting", code:code}.to_json
             end
         else
             code = sprintf '%05d', SecureRandom.random_number(99999)
@@ -198,7 +196,7 @@ module Dwmb
         data = JSON.parse(params["data"])
         new_states = data["slots"]
         key = data["key"]
-        picture = data["snapshot"] if data["snapshot"]
+        snapshot = data["snapshot"] if data["snapshot"]
 
         response = {
             status: "ok",
@@ -210,11 +208,10 @@ module Dwmb
             response[:status] = "error"
             response[:message] = "wrong key"
         else
-            message = setup.state_update(new_states, picture)
+            message = setup.state_update(new_states, snapshot)
             response[:status] = if message == :theft then 'error' else 'ok' end
             response[:message] = message.to_s
         end
-
         response[:slots] = setup.serialise_slots
         return response.to_json
     end
