@@ -1,7 +1,10 @@
 $busy-light-color: yellow;
-$header-buttons-color: #016F54;
+$header-buttons-color: #035E9F;
+//#016F54;
 $header-buttons-text-color: white;
-$skin-image: "../img/bg1.jpg";
+
+$skin-image: "../img/bg3.jpg";
+$tr-light-image: "../img/texture.jpg";
 
 @mixin background-image($image) {
   background-image: url( $image );
@@ -50,7 +53,7 @@ body {
   border: 2px solid white;
   border-radius: 10px;
 
-  padding: 25px;
+  padding: 10px;
 
   background-color: $header-buttons-color;
 
@@ -59,6 +62,10 @@ body {
   color: $header-buttons-text-color;
 
   cursor: pointer;
+}
+
+.user_button > * {
+  font-style: Arial, Helvetica, sans-serif;
 }
 
 .content-container {
@@ -74,7 +81,9 @@ body {
 }
 
 .content-container > .board {
-  background-color: black;
+  //background-color: black;
+  @include background-image( $tr-light-image );
+  box-shadow: 5px 5px 10px #444;
 
   width: 80%;
   height: 145px;
@@ -181,6 +190,21 @@ body {
 }
 #login_submit {
   float: right;
+}
+
+#registration_form {
+  background-color: #ddd;
+
+  width: 450px;
+
+  padding: 20px 40px;
+  
+  position: absolute;
+
+  z-index: 1000;
+}
+#registration_form ul {
+  list-style-type: none;
 }
 
 .footer {

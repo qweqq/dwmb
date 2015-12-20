@@ -1,5 +1,5 @@
 body {
-  background-image: url("../img/bg1.jpg");
+  background-image: url("../img/bg3.jpg");
   background-size: contain;
   background-size: cover; }
 
@@ -31,12 +31,15 @@ body {
   border-image: url("") 27 27 27 27 round round;
   border: 2px solid white;
   border-radius: 10px;
-  padding: 25px;
-  background-color: #016F54;
+  padding: 10px;
+  background-color: #035E9F;
   font-weight: bold;
   font-size: 19pt;
   color: white;
   cursor: pointer; }
+
+.user_button > * {
+  font-style: Arial, Helvetica, sans-serif; }
 
 .content-container {
   display: flex;
@@ -47,7 +50,10 @@ body {
   width: 100%; }
 
 .content-container > .board {
-  background-color: black;
+  background-image: url("../img/texture.jpg");
+  background-size: contain;
+  background-size: cover;
+  box-shadow: 5px 5px 10px #444;
   width: 80%;
   height: 145px;
   border: 1px solid black;
@@ -126,6 +132,16 @@ body {
 
 #login_submit {
   float: right; }
+
+#registration_form {
+  background-color: #ddd;
+  width: 450px;
+  padding: 20px 40px;
+  position: absolute;
+  z-index: 1000; }
+
+#registration_form ul {
+  list-style-type: none; }
 
 .footer {
   bottom: 0;

@@ -13,22 +13,29 @@
   </form>
   <div id="register" class="user_button">Регистрация</div>
 
-  <form id="registration_form" action="#" hidden="hidden">
+  <form id="registration_form" class="form-horizontal" action="#" hidden="hidden">
     <div>
       <h3>Въвеждане на код</h3>
       <section>
-          <form action="">
-            <p>Моля, въведи кода, който си получил от охранителното устройство след чекиране на ISIC карта:</p>
-            <input type="text" name="validation_code">
+          <form action="" class="form-horizontal">
+            <div class="form-group">
+              <label for="codeInputField">Тук можеш да въведеш кода, който си получил от охранителното устройство след чекиране на ISIC карта си</label>
+              <input type="text" class="form-control" id="codeInputField" placeholder="Код">
+            </div>
             <!-- <input type="submit" value="Продължи"> -->
           </form> 
       </section>
       <h3>Вече може да се регистрираш</h3>
       <section>
-          <form action="">
-            Потребителско име * <input type="text" name="username"><br>
-            Парола * <input type="password" name="password"><br>
-            <!-- <input type="submit" value="Продължи"> -->
+          <form action="" class="form-horizontal">
+            <div class="form-group">
+              <label for="usernameLoginInput">Потребителско име *</label>
+              <input type="text" class="form-control" id="usernameLoginInput">
+            </div>
+            <div class="form-group">
+              <label for="passwordLoginInput">Парола *</label>
+              <input type="password" class="form-control" id="passwordLoginInput" placeholder="Код">
+            </div>
           </form> 
       </section>
     </div>
