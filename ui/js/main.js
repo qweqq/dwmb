@@ -42,10 +42,29 @@
 
 (function () {
 
-  var lights = [ 'on', 'off', 'off', 'on', 'on', 'off', 'on', 'off' ];
+  /*setInterval(function(){
+    $.ajax({
+      url: '/status_all'
+    }).done( function ( json ) {
+      var jsonData = $.parseJSON( json );
+      var slots = jsonData['slots'];
+
+      for ( var i = 0; i < slots.length; i++ ) {
+        if ( slots[i] === 'on' ) {
+          HELPERS_MODULE.switchOnSlot( i );
+        } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
+          HELPERS_MODULE.switchOffSlot( i );
+        }
+      }      
+    } )
+  }, 1000);*/
+
+  var lights = [ 'on', 'off', 'error', 'on', 'on', 'off', 'on', 'off' ];
 
   for ( var i = 0; i < lights.length; i++ ) {
-    if ( lights[i] === 'on' ) {
+    if ( lights[i] === 'error' ) {
+      HELPERS_MODULE.switchToError( i );
+    } else if ( lights[i] === 'on' ) {
       HELPERS_MODULE.switchOnSlot( i );
     } else if ( $( "[data-id='" + i + "']" ).hasClass( 'on' ) ) {
       HELPERS_MODULE.switchOffSlot( i );

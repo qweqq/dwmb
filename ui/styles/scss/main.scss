@@ -1,4 +1,5 @@
 $busy-light-color: yellow;
+$error-light-color: red;
 $header-buttons-color: #035E9F;
 //#016F54;
 $header-buttons-text-color: white;
@@ -48,17 +49,16 @@ body {
   display: inline-block;
   margin-left: 10%;
 
-  border-image: url( '' ) 27 27 27 27 round round;
-
-  border: 2px solid white;
+  border: 2px solid $header-buttons-color;
   border-radius: 10px;
+  box-shadow: inset 0px 0px 4px white;
 
-  padding: 10px;
+  padding: 10px 20px;
 
   background-color: $header-buttons-color;
 
-  font-weight: bold;
-  font-size: 19pt;
+  //font-weight: bold;
+  font-size: 20pt;
   color: $header-buttons-text-color;
 
   cursor: pointer;
@@ -127,6 +127,19 @@ body {
   box-shadow: 0px 0px 10px $busy-light-color;
   background-color: $busy-light-color;
   border: 1px solid $busy-light-color;
+
+  inset: 0 0 20px 0px (0, 0, 0, 1);
+
+  -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+  transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
+}
+
+.lights > li.light.error {
+  box-shadow: 0px 0px 10px $error-light-color;
+  background-color: $error-light-color;
+  border: 1px solid $error-light-color;
+
+  inset: 0 0 20px 0px (0, 0, 0, 1);
 
   -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
   transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
