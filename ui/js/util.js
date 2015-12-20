@@ -2,13 +2,12 @@ var HELPERS_MODULE = (function () {
   return {
     switchOnSlot: function ( indexOfSlot ) {
       var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
-      
+
       if ( !slot.hasClass( 'on' ) ) {
         slot.addClass( 'on' );
       }
 
-      var slotsNumber = $( '#freeSlots' ).html();
-      $( '#freeSlots' ).html( parseInt( slotsNumber ) - 1 );
+      $( '#freeSlots' ).html( $( '#board1 .light:not(.on)' ).length );
     },
     switchOffSlot: function ( indexOfSlot ) {
       var slot = $( "#board1 [data-id='" + indexOfSlot + "']" );
@@ -17,8 +16,7 @@ var HELPERS_MODULE = (function () {
         slot.removeClass( 'on' );
       }
 
-      var slotsNumber = $( '#freeSlots' ).html();
-      $( '#freeSlots' ).html( parseInt( slotsNumber ) + 1 );
+      $( '#freeSlots' ).html( $( '#board1 .light:not(.on)' ).length );
     },
     switchToError: function ( indexOfSlot ) {
       this.switchOnSlot();

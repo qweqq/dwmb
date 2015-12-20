@@ -15,6 +15,9 @@ module Dwmb
         @@setup ||= Setup.new
     end
 
+    get "/status_all" do
+      {status:"ok", slots:["on", "off", "on", "error"]}.to_json
+    end
 
     get "/" do
       redirect '/index.html'
