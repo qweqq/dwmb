@@ -2,7 +2,8 @@
   //var menuUrl = "../main-header.html";
   var menuUrl = "../loged-user-header.html";
   var contentUrl = "../main-content.html";
-  var jsUrl = "js/main.js";
+  var mainJsUrl = "js/main.js";
+  var jsUrl = "js/user.js";
 
   $.ajax({
     url: menuUrl,
@@ -16,6 +17,10 @@
     }).done( function( data ) {
       $( '.content-container' ).append( data );
 
+      $.ajax({
+        url: mainJsUrl,
+        context: document.body
+      });
       $.ajax({
         url: jsUrl,
         context: document.body

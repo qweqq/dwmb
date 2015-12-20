@@ -1,32 +1,43 @@
-<div class="bike-board">
-  <div id="pipe2" class="pipe"></div>
+<div class="bike-board user_button">
+  <div id="pipe1" class="pipe"></div>
   <div id="pipe2" class="pipe"></div>
 
-  <div class="info"></div>
+  <div class="info">Имаш заключено колело с кабел №<span id="slotNumber">n</span> <!-- от <span id="timer">1:23</span> часа --></div>
 </div>
 
 <div class="user-profile">
   <div id="profileButton" class="profile-button user_button">Профил</div>
-  <section id="" action="#" hidden="hidden">
+  <section id="profileInfo" action="#" hidden="hidden">
     <div class="form-group">
-      <label for="username">Потребителско име *</label>
-      <input type="text" class="form-control" id="username">
+      <label for="username">Потребителско име</label>
+      <input type="text" class="form-control" id="username" disabled>
     </div>
     <div class="form-group">
-      <label for="password">Парола *</label>
-      <input type="password" class="form-control" id="password">
+      <label for="emailInfo">E-mail</label>
+      <input type="email" class="form-control" id="email" disabled>
     </div>
-    <input id="login_submit" class="btn btn-default" type="button" value="Промени">
+    <input id="editProfileButton" class="btn btn-default float-right" type="button" value="Промени">
   </section>
-  <form id="" action="#" hidden="hidden">
+  <form id="userInfoEdit" action="#" hidden="hidden">
     <div class="form-group">
       <label for="username">Потребителско име *</label>
       <input type="text" class="form-control" id="username">
     </div>
+    <br>
     <div class="form-group">
-      <label for="password">Парола *</label>
-      <input type="password" class="form-control" id="password">
+      <label for="password1">Стара парола</label>
+      <input type="password" class="form-control" id="password1">
     </div>
-    <input id="login_submit" class="btn btn-default" type="button" value="Запази">
+    <div class="form-group">
+      <label for="password2">Нова парола</label>
+      <input type="password" class="form-control" id="password2">
+    </div>
+    <br>
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" class="form-control" id="email" placeholder="example@email.com">
+    </div>
+    <br>
+    <input id="saveProfileChanges" class="btn btn-default float-right" type="button" value="Запази">
   </form>
 </div>

@@ -72,8 +72,6 @@
       var jsonData = $.parseJSON( json );
       var slots = jsonData['slots'];
 
-      console.log(slots);
-
       for ( var i = 0; i < slots.length; i++ ) {
         if ( slots[i] === 'error' ) {
           HELPERS_MODULE.switchToError( i );
