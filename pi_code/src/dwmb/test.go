@@ -20,7 +20,7 @@ func processResponse(messages chan<- *comm.DisplayMessage, messageTimer *time.Ti
 
 	message := &comm.DisplayMessage{}
 
-	if resp.Message != "" && resp.Message != "ok" && resp.Message != "cable" {
+	if resp.Message != "" && resp.Message != "ok" {
 		text, timeout := display.MakeMessage(resp)
 		messageTimer.Reset(timeout * time.Second)
 		message.Message = text
@@ -58,8 +58,7 @@ func main() {
 	state := &comm.State{Message: ""}
 	tag := &rfid.Tag{}
 
-	sound := sound.NewSound("/tmp")
-	sound.Play("woosh")
+	sound := sound.NewSound("./sounds")
 
 	messages <- &comm.DisplayMessage{Message: "hi!"}
 
@@ -74,10 +73,16 @@ func main() {
 	for {
 		select {
 		case state = <-states:
+			state.Snapshot = "/tmp/test.jpg"
 			resp, err := server.SendState(state)
 			if err != nil {
 				log.Print(err)
 			} else {
+				if resp.Message == "theft" {
+					sound.Play("alarm", true)
+				} else {
+					sound.Stop()
+				}
 				processResponse(messages, messageTimer, resp)
 			}
 		case tag = <-tags:
@@ -86,6 +91,7 @@ func main() {
 				quickMessage(messages, "error :(")
 				log.Print(err)
 			} else {
+				sound.Play("poop", false)
 				processResponse(messages, messageTimer, resp)
 			}
 		}
