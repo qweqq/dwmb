@@ -139,7 +139,7 @@ module Dwmb
             search_input[:user] = user
             search_input[:slot] = user_index
             search_input[:type] = :connected
-            search_output = Events.last **search_input
+            search_output = Event.last **search_input
             time = search_output.time
             return{status:"ok", slot:user_index.to_s, time:time}.to_json
         else
