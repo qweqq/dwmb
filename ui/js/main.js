@@ -98,20 +98,20 @@
    $( '#registration_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
 
-    //~ $.ajax({
-      //~ url: '/poop',
-      //~ data: {
-        //~ data: JSON.stringify({
-          //~ rfid: '123123',
-        //~ })
-      //~ },
-      //~ type: 'POST',
-    //~ }).done(function (data) {
-      //~ console.log('pooped')
+    $.ajax({
+      url: '/poop',
+      data: {
+        data: JSON.stringify({
+          rfid: '123123',
+        })
+      },
+      type: 'POST',
+    }).done(function (data) {
+      console.log('pooped')
       
-      //~ var jsonData = JSON.parse(data);
-      //~ var code = jsonData['code'];
-      var code = $( '#codeLoginInput' ).val();
+      var jsonData = JSON.parse(data);
+      var code = jsonData['code'];
+      //~ var code = $( '#codeLoginInput' ).val();
       
       var registrationData = {
         data: JSON.stringify({
@@ -142,7 +142,7 @@
     })
 
     
-  //~ } );
+  } );
 
 })();
 
