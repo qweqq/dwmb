@@ -78,6 +78,11 @@ func main() {
 			if err != nil {
 				log.Print(err)
 			} else {
+				if resp.Message == "theft" {
+					sound.Play("alarm", true)
+				} else {
+					sound.Stop()
+				}
 				processResponse(messages, messageTimer, resp)
 			}
 		case tag = <-tags:

@@ -22,6 +22,9 @@ func (s *Sound) Play(sound string, override bool) {
 	if s.currentSound == sound {
 		return
 	}
+
+	s.currentSound = sound
+
 	if s.player != nil {
 		if override {
 			s.Stop()
@@ -36,6 +39,8 @@ func (s *Sound) Play(sound string, override bool) {
 }
 
 func (s *Sound) Stop() {
-	s.player.Process.Kill()
-	s.player = nil
+	if s.player != nil {
+		s.player.Process.Kill()
+		s.player = nil
+	}
 }
