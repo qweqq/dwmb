@@ -10,6 +10,9 @@
 #include "leds.h"
 #include "adc_values.h"
 
+const uint8_t led_indices[8] = {4, 3, 7, 6, 2, 0, 1, 5};
+const uint8_t slot_indices[8] = {5, 7, 6, 4, 2, 1, 0, 3};
+
 static inline void adc_init()
 {
     // Internal ref equal to AVCC, no left align, ADC0 input
@@ -49,11 +52,11 @@ void state_changed() {
     ticks_since_last_change = 0;
     uart_write_byte('s');
     for (uint8_t i = 0; i < 8; i++) {
-        if (states[i] == plugged) {
+        if (states[slot_indices[i]] == plugged) {
             uart_write_byte('p');
             continue;
         }
-        if (states[i] == unplugged) {
+        if (states[slot_indices[i]] == unplugged) {
             uart_write_byte('u');
             continue;
         }
@@ -112,16 +115,16 @@ void process_command(char* command) {
             for (char* c = &(command[1]); *c != '\0'; c++) {
                 switch(*c) {
                     case 'o':
-                        leds[i] = off;
+                        leds[led_indices[i]] = off;
                         break;
                     case 'r':
-                        leds[i] = red;
+                        leds[led_indices[i]] = red;
                         break;
                     case 'g':
-                        leds[i] = green;
+                        leds[led_indices[i]] = green;
                         break;
                     case 'y':
-                        leds[i] = yellow;
+                        leds[led_indices[i]] = yellow;
                         break;
                 }
                 i++;
