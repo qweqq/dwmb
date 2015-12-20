@@ -45,7 +45,7 @@ module Dwmb
       belongs_to :user
   end
 
-  class Event
+  class Telegram
       include DataMapper::Resource
       property :id, Serial
       property :chatid, String
@@ -57,4 +57,5 @@ module Dwmb
   User.auto_upgrade!
   Session.auto_upgrade!
   Event.auto_upgrade!
+  Telegram.auto_upgrade!
 end

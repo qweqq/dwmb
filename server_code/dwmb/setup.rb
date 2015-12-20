@@ -151,8 +151,12 @@ module Dwmb
                             alarm.type = :theft
                             time = Time.now.utc
                             save_snapshot(time.to_i.to_s, snapshot) if snapshot
-                                filename = time.to_i.to_s + ".jpg"
-                            send_mail(current_slot_user.email, filename) if current_slot_user.email
+                            filename = time.to_i.to_s + ".jpg"
+                            begin
+                                send_mail(current_slot_user.email, filename) if current_slot_user.email
+                            rescue
+                                puts "no net"
+                            end
                             Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: filename)
                         end
                         result = :theft
