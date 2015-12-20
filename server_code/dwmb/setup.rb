@@ -101,7 +101,7 @@ module Dwmb
             end
         end
 
-        def state_update(new_states, snapshot)
+        def state_update(new_states, snapshot=nil)
             @timer.reset
             reset_alarm if alarm.alarm
             result = :ok
@@ -115,8 +115,7 @@ module Dwmb
                     if @connecting
                         @current_slots[index] = [@connecting, :none]
                         time = Time.now.utc
-                        content = File.read(time.to_s)
-                        save_shanpshot(time, snapshot)
+                        save_shanpshot(time, snapshot) if snapshot
                         Event.create(user: @connecting, slot:index.to_s, type: :connected, time:time, snapshot: time)
                         @connecting = nil
                         result = :connected
@@ -125,8 +124,7 @@ module Dwmb
                     if current_slot_state == :leaving
                         current_slots[index] = [nil, :none]
                         time = Time.now.utc
-                        content = File.read(time.to_s)
-                        save_shanpshot(time, snapshot)
+                        save_shanpshot(time, snapshot) if snapshot
                         Event.create(user: current_slot_user, slot:index.to_s, type: :disconnected, time:time, snapshot: time)
                     else
                         if current_slots[index][1] != :theft
@@ -135,8 +133,7 @@ module Dwmb
                             alarm.slot = index
                             alarm.type = :theft
                             time = Time.now.utc
-                            content = File.read(time.to_s)
-                            save_shanpshot(time, snapshot)
+                            save_shanpshot(time, snapshot) if snapshot
                             Event.create(user: current_slot_user, slot:index.to_s, type: :alarm, time:time, snapshot: time)
                         end
                         result = :theft

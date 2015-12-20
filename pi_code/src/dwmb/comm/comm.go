@@ -26,7 +26,7 @@ type State struct {
 
 type DisplayMessage struct {
 	Message string
-	Lights  *[8]int
+	Lights  [8]int
 }
 
 func Init(device string, baud int) (chan *State, chan *DisplayMessage, error) {
@@ -96,20 +96,21 @@ func send(f *serial.Port, displayMessages <-chan *DisplayMessage) {
 				f.Write([]byte("d" + strings.Replace(message.Message, "\n", "\v", -1) + "\n"))
 			}
 		}
-		if message.Lights != nil {
-			f.Write([]byte("l"))
-			for lamp := range message.Lights {
-				switch lamp {
-				case Off:
-					f.Write([]byte("o"))
-				case Red:
-					f.Write([]byte("r"))
-				case Green:
-					f.Write([]byte("g"))
-				case Yellow:
-					f.Write([]byte("y"))
-				}
+		ledMessage := make([]byte, 8+2)
+		ledMessage[0] = 'l'
+		for i, lamp := range message.Lights {
+			switch lamp {
+			case Red:
+				ledMessage[i+1] = 'r'
+			case Green:
+				ledMessage[i+1] = 'g'
+			case Yellow:
+				ledMessage[i+1] = 'y'
+			default:
+				ledMessage[i+1] = 'o'
 			}
 		}
+		ledMessage[9] = '\n'
+		f.Write(ledMessage)
 	}
 }

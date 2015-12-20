@@ -8,6 +8,7 @@ import (
 	"dwmb/display"
 	"dwmb/request"
 	"dwmb/rfid"
+	"dwmb/sound"
 )
 
 func quickMessage(messages chan<- *comm.DisplayMessage, text string) {
@@ -19,12 +20,24 @@ func processResponse(messages chan<- *comm.DisplayMessage, messageTimer *time.Ti
 
 	message := &comm.DisplayMessage{}
 
-	if resp.Message != "" && resp.Message != "ok" {
+	if resp.Message != "" && resp.Message != "ok" && resp.Message != "cable" {
 		text, timeout := display.MakeMessage(resp)
 		messageTimer.Reset(timeout * time.Second)
 		message.Message = text
 	}
 
+	for i, slot := range resp.Slots {
+		switch slot {
+		case request.Free:
+			message.Lights[i] = comm.Green
+		case request.Occupied:
+			message.Lights[i] = comm.Yellow
+		case request.Alarm:
+			message.Lights[i] = comm.Red
+		default:
+			message.Lights[i] = comm.Off
+		}
+	}
 	messages <- message
 	return
 }
@@ -44,6 +57,9 @@ func main() {
 
 	state := &comm.State{Message: ""}
 	tag := &rfid.Tag{}
+
+	sound := sound.NewSound("/tmp")
+	sound.Play("woosh")
 
 	messages <- &comm.DisplayMessage{Message: "hi!"}
 

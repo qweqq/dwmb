@@ -44,10 +44,17 @@ func NewServer(baseUrl string, Key string) *Server {
 	return &Server{BaseUrl: baseUrl, Key: Key}
 }
 
+/*
+func encodeImage(filename string) string {
+
+}
+*/
+
 func (s *Server) SendState(state *comm.State) (*Response, error) {
 	data, err := json.Marshal(&stateMessage{
 		Slots: state.Slots,
 		Key:   s.Key,
+		// Snapshot: encodeImage(s.Snapshot),
 	})
 	if err != nil {
 		return nil, err
