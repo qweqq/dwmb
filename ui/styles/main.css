@@ -30,14 +30,14 @@ body {
   background-image: url("../img/texture.jpg");
   background-size: contain;
   background-size: cover;
-  heigth: 20px;
-  opacity: 0.7;
-  filter: alpha(opacity=70);
+  opacity: 0.8;
+  filter: alpha(opacity=80);
   /* For IE8 and earlier */
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 20pt;
   color: white;
+  text-align: center;
   cursor: pointer; }
 
 .user-buttons > .user_button {
@@ -52,19 +52,24 @@ body {
   width: 142px;
   float: right; }
 
+#profileButton {
+  position: relative;
+  left: -30px; }
+
 .user-profile #profileInfo,
 .user-profile #userInfoEdit {
   width: 300px;
   padding: 20px;
   position: absolute;
   right: 153px;
-  top: 81px;
+  top: 100px;
   background-image: url("../img/texture.jpg");
   background-size: contain;
   background-size: cover;
+  border-radius: 5px;
   color: white;
-  opacity: 0.7;
-  filter: alpha(opacity=70);
+  opacity: 0.8;
+  filter: alpha(opacity=80);
   /* For IE8 and earlier */
   z-index: 200; }
 
@@ -87,7 +92,7 @@ body {
   width: 80%;
   height: 145px;
   border: 1px solid black;
-  border-radius: 10px;
+  border-radius: 5px;
   align: center;
   margin: 0 auto; }
 
@@ -157,7 +162,9 @@ body {
   margin: 0 auto;
   position: relative;
   align: center;
-  top: 10px; }
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+  /* For IE8 and earlier */ }
 
 .menu > .subscribtion-buttons {
   display: inline-block;
@@ -232,9 +239,9 @@ body {
   text-align: center;
   width: 30%;
   height: 50px;
-  border-radius: 10px;
+  border-radius: 5px;
   left: 35%;
-  top: 30%; }
+  top: 40%; }
 
 .bike-board > .info {
   font-size: 15pt;
@@ -250,5 +257,9 @@ body {
   position: fixed;
   text-align: center;
   width: 100%; }
+
+/*.bike-board.pipe {
+  @include background-image( $pipe );
+}*/
 
 /*# sourceMappingURL=main.css.map */
