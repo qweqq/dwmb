@@ -71,7 +71,7 @@
 
   $( '#login_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
-	  
+
     var data = {
       data: JSON.stringify({
         username: $( '#username' ).val(),
@@ -94,25 +94,25 @@
       }
     })
   } );
-  
-   $( '#registration_form' ).on('submit', function (ev) {
-	  console.log(" ______ AKSDFKA SJDJFAJSDJF ")
+
+  $( '#registration_form' ).on('submit', function (ev) {
 	  ev.preventDefault()
 
-    $.ajax({
-      url: '/poop',
-      data: {
-        data: JSON.stringify({
-          rfid: '123123',
-        })
-      },
-      type: 'POST',
-    }).done(function (data) {
-      console.log('pooped')
+    //~ $.ajax({
+      //~ url: '/poop',
+      //~ data: {
+        //~ data: JSON.stringify({
+          //~ rfid: '123123',
+        //~ })
+      //~ },
+      //~ type: 'POST',
+    //~ }).done(function (data) {
+      //~ console.log('pooped')
       
-      var jsonData = JSON.parse(data);
-      var code = jsonData['code'];
-      
+      //~ var jsonData = JSON.parse(data);
+      //~ var code = jsonData['code'];
+      var code = $( '#codeInputField' ).val();
+
       var registrationData = {
         data: JSON.stringify({
           username: $( '#usernameLoginInput' ).val(),
@@ -121,7 +121,9 @@
           code: code,
         })
       }
-      
+
+      console.log('code:', code, "registrationData:", registrationData);
+
       $.ajax({
         url: '/register',
         data: registrationData,
@@ -131,21 +133,16 @@
         if ( jsonData['status'] == 'error' ) {
           console.error(data);
         } else if ( jsonData['status'] == 'ok' ) {
-          console.log('registered')
-          
           var tmp = JSON.parse(registrationData.data);
 
-          $('#username').val(tmp['username'])
-          $('#password').val(tmp['password'])
-          
+          // dumb way to login
+          $('#username').val(tmp['username']);
+          $('#password').val(tmp['password']);
           $('#login_form').submit();
         }
       })
-    })
-
-    
-  } );
-
+    //~ });
+	});
 })();
 
 (function () {
@@ -171,5 +168,6 @@
     } )
   }, 1000);
 
-})();
+  $('[data-toggle="tooltip"]').tooltip();
 
+})();

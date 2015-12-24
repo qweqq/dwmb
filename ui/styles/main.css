@@ -145,9 +145,6 @@ body {
   box-shadow: 0px 0px 10px red;
   background-color: red;
   border: 1px solid red;
-  background-image: url("../img/warning.png");
-  background-size: contain;
-  background-size: cover;
   inset: 0 0 20px 0px 0, 0, 0, 1;
   -webkit-transition: box-shadow 0.5s, background-color 0.5s, border 0.5s;
   transition: box-shadow 0.5s, background-color 0.5s, border 0.5s; }
@@ -160,10 +157,9 @@ body {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  width: 20%;
-  height: 35px;
+  width: 23%;
   border-radius: 5px;
-  margin: 0 auto;
+  margin: 1px auto;
   position: relative;
   align: center;
   opacity: 0.8;
@@ -240,10 +236,10 @@ body {
 .bike-board {
   position: absolute;
   text-align: center;
-  width: 30%;
+  width: 40%;
   height: 50px;
   border-radius: 5px;
-  left: 35%;
+  left: 29%;
   top: 40%; }
 
 .bike-board > .info {

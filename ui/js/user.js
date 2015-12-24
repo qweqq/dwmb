@@ -25,29 +25,29 @@
 })();
 
 (function () {
-  var sessionId = HELPERS_MODULE.getCookie('sessionId');
+  setInterval(function() {
+    var sessionId = HELPERS_MODULE.getCookie('sessionId');
 
-  var data = {
-    data: {
-      session_id: sessionId
-    }
-  };
+    var userData = {
+      data: JSON.stringify({
+        session_id: sessionId
+      })
+    };
+    
+    $.ajax({
+      url: '/user_info',
+      data: userData,
+      type: 'POST'
+    }).done( function ( data ) {
+      var jsonData = $.parseJSON( data );
 
-  $.ajax({
-    url: '/user_info',
-    data: data,
-    type: 'POST'
-  }).done( function ( data ) {
-    var jsonData = $.parseJSON( data );
+      if ( jsonData['status'] == 'not checked' ) {
+        $( '.bike-board' ).hide( 'fast' );
+      } else if ( jsonData['status'] == 'ok' ) {
+        $( '.bike-board' ).show( 'fast' );
 
-    console.log( jsonData );
-
-    if ( jsonData['status'] == 'not checked' ) {
-      $( '.bike-board' ).hide( 'fast' );
-    } else if ( jsonData['status'] == 'ok' ) {
-      $( '.bike-board' ).show( 'fast' );
-
-      $( '#slotNumber' ).html( jsonData['slot'] );
-    }
-  });
+        $( '#slotNumber' ).html( parseInt(jsonData['slot']) + 1 );
+      }
+    });
+  }, 1000);
 })();

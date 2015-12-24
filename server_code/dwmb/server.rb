@@ -127,24 +127,19 @@ module Dwmb
 
     #data = {session_id:...}
     post '/user_info' do
-		p params
-		p '-----------'
-        lala = params["data"]
-        p lala
-        p '-----------'
-        
-        session_id = lala["session_id"]
+		input = JSON.parse(params["data"])
+        session_id = input['session_id']
         session = Session.first(session_id:session_id)
         return{status:"not logged"}.to_json unless session
         user = session.user
         rfid = user.card.rfid
-        user_index = on_ramp rfid
+        user_index = setup.on_ramp rfid
         if user_index
             search_input = {}
             search_input[:user] = user
             search_input[:slot] = user_index
             search_input[:type] = :connected
-            search_output = Events.last **search_input
+            search_output = Event.last **search_input
             time = search_output.time
             return{status:"ok", slot:user_index.to_s, time:time}.to_json
         else
